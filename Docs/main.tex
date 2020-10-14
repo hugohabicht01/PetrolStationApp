@@ -2,7 +2,7 @@
 \usepackage[utf8]{inputenc}
 \usepackage[english]{babel}
 \usepackage{graphicx}
-
+\usepackage{hyperref}
 % \usepackage{biblatex}
 % \addbibresource{resources.bib}
 \title{Petrol Station App}
@@ -34,6 +34,15 @@ This solution consist of two different main parts:
 \end{figure}
 The separation between the API Server itself and the server that delivers the static files (html, css and js files) ensures that making changes, when the solution is running in production, is easy since the logic is separeted from the frontend and how it looks. If I would use a Backend that delivers the static files and does the logic as well it wouldn't scale well if you had to deploy it on more servers to balance the load. Additionally this ensures that you can have different frontends (mobile app and website for example) that have the same logic without having to implement it twice. Another pro for this architecture is that you could have different CDNs so that you get the static files form the geographical nearest CDN with increases the load speed.
 
+\subsection{UI}
+% TODO
+Describe how to design the UI
+\subsection{Backend-Endpoints}
+I intend to build the backend in the programming language Python 3.9 using the Framework \href{https://fastapi.tiangolo.com/}{FastAPI} for building the backend. All needed python libraries will be installed and managed by pipenv since python library dependicies can be very difficult to resolve by hand and installing the libraries globally on your system might work on your machine but will cause issues once you deploy it.
+
+The Backend should accept requests by the clients, fetch the nearest petrol stations from the \href{https://creativecommons.tankerkoenig.de/}{Tankerkönig API}, loop over the results, fetch the navigation instructions from the \href{https://developers.google.com/maps/documentation/directions/start}{Google Maps Directions API} and the \href{https://developers.google.com/maps/documentation/roads/overview}{Google Maps Roads API} 
+% TODO: https://developer.here.com/pricing This might be an alternative for route calculations https://developer.here.com/documentation/routing/dev_guide/topics/resource-param-type-vehicle-type.html and https://developers.google.com/maps/documentation/distance-matrix/overview
+ for each petrol station, calculate roughly how much fuel you would consume to get there from your current location and then sort it by cheapest. This would then be served to the clients. 
 
 \section{Development}
 \end{document}
