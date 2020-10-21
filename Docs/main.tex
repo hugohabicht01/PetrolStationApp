@@ -1,8 +1,7 @@
 \documentclass{article}
 \usepackage[utf8]{inputenc}
 \usepackage[english]{babel}
-\usepackage{graphicx}
-\usepackage{hyperref}
+\usepackage{graphicx} \usepackage{hyperref}
 % \usepackage{biblatex}
 % \addbibresource{resources.bib}
 \title{Petrol Station App}
@@ -42,6 +41,7 @@ I intend to build the backend in the programming language Python 3.9 using the F
 
 The Backend should accept requests by the clients, fetch the nearest petrol stations from the \href{https://creativecommons.tankerkoenig.de/}{Tankerkönig API}, loop over the results, fetch the navigation instructions from the \href{https://developers.google.com/maps/documentation/directions/start}{Google Maps Directions API} and the \href{https://developers.google.com/maps/documentation/roads/overview}{Google Maps Roads API} 
 % TODO: https://developer.here.com/pricing This might be an alternative for route calculations https://developer.here.com/documentation/routing/dev_guide/topics/resource-param-type-vehicle-type.html and https://developers.google.com/maps/documentation/distance-matrix/overview
+% https://github.com/swistakm/python-gmaps This might be another good option, 3rd party though
  for each petrol station, calculate roughly how much fuel you would consume to get there from your current location and then sort it by cheapest. This would then be served to the clients. 
 
 \section{Development}
