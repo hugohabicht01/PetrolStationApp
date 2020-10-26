@@ -2,6 +2,9 @@
 .env
 __pycache__/
 
+# VSCode Settings
+.vscode/
+
 # Latex gitignore from https://github.com/github/gitignore/blob/master/TeX.gitignore
 
 # Rendered pdfs:

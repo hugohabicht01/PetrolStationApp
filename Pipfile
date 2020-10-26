@@ -4,11 +4,18 @@ url = "https://pypi.org/simple"
 verify_ssl = true
 
 [dev-packages]
+pylint = "*"
 
 [packages]
 requests = "*"
 googlemaps = "*"
 python-dotenv = "*"
+fastapi = "*"
+uvicorn = "*"
 
 [requires]
 python_version = "3.8"
+
+[scripts]
+dev = "uvicorn app.main:app --reload"
+test = "python3 -m unittest discover -v app/tests"
