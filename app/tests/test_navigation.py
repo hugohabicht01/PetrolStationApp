@@ -54,3 +54,12 @@ class TestNavigation(TestCase):
 
         self.assertEqual(res, expected_res)
         print(res)
+
+    def test_calculate_fuel_consumption(self):
+        res_city: float = navigation.calculate_fuel_consumption(2000, 140, 10, 7)
+        expected_res_city = 0.2
+        self.assertEqual(res_city, expected_res_city)
+
+        res_motorway: float = navigation.calculate_fuel_consumption(2000, 40, 10, 7)
+        expected_res_motorway = 0.14
+        self.assertEqual(res_motorway, expected_res_motorway)
