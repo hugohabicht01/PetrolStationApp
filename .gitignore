@@ -5,6 +5,9 @@ __pycache__/
 # VSCode Settings
 .vscode/
 
+# Jetbrains IDEs settings
+.idea/
+
 # Latex gitignore from https://github.com/github/gitignore/blob/master/TeX.gitignore
 
 # Rendered pdfs:
