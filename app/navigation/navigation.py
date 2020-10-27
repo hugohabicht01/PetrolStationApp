@@ -65,7 +65,6 @@ def calculate_fuel_consumption(
     Returns:
         Estimated fuel consumed in liters
     """
-    # TODO: Add test
     # Get the avg. consumption on 1 km
     avg_city_fuelconsumption /= 100
     avg_motorway_fuelconsumption /= 100
@@ -74,5 +73,5 @@ def calculate_fuel_consumption(
     speed: float = (distance / duration) * 3.6
 
     if speed >= 60:
-        return distance * avg_motorway_fuelconsumption
-    return distance * avg_city_fuelconsumption
+        return (distance / 1000) * avg_motorway_fuelconsumption
+    return (distance / 1000) * avg_city_fuelconsumption
