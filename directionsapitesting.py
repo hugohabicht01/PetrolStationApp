@@ -1,14 +1,11 @@
-import googlemaps
 import os
-from datetime import datetime
 from os.path import join, dirname
-from dotenv import load_dotenv
-from pprint import pprint
 
+import googlemaps
+from dotenv import load_dotenv
 
 dotenv_path = join(dirname(__file__), '.env')
 load_dotenv(dotenv_path)
-
 
 api_key = os.getenv('GOOGLE_API_KEY')
 
@@ -26,18 +23,18 @@ gmaps = googlemaps.Client(key=api_key)
 
 # Request directions via public transit
 # directions_result = gmaps.distance_matrix("50.1415865,8.8984939",
-    # ('50.1350588,8.917969800000002',
-    # '50.14437,8.7201301',
-    # '50.121089,8.6875334'),
+# ('50.1350588,8.917969800000002',
+# '50.14437,8.7201301',
+# '50.121089,8.6875334'),
 #     mode="driving",
 # )
 
 
 directions_result = gmaps.distance_matrix(origins="Händelstraße 10 Hanau Germany",
-    destinations=['Kassel Germany', 'Freiheitsplatz Hanau Germany'],
+                                          destinations=['Kassel Germany', 'Freiheitsplatz Hanau Germany'],
 
-    mode="driving",
-)
+                                          mode="driving",
+                                          )
 
 print(f"Type: {type(directions_result)}\n\n")
 print(directions_result)

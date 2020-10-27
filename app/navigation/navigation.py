@@ -12,7 +12,10 @@ from typing import List, Tuple
 #         resp = await client.distance_matrix(origins=current_coords, destinations=dest)
 #         return resp
 
-def getDistanceMatrix(current_pos: Tuple[str, str], destinations: List[Tuple[str, str]], api_key: str) -> dict:
+
+def get_distance_matrix(
+    current_pos: Tuple[str, str], destinations: List[Tuple[str, str]], api_key: str,
+) -> dict:
     current_coords = f"{current_pos[0]}, {current_pos[1]}"
     destinations = [f"{dest_lat}, {dest_lng}" for dest_lat, dest_lng in destinations]
 
@@ -20,7 +23,13 @@ def getDistanceMatrix(current_pos: Tuple[str, str], destinations: List[Tuple[str
 
     return gmaps.distance_matrix(origins=current_coords, destinations=destinations)
 
-def calculateFuelConsumption(distance: float, duration: str, avg_city_fuelconsumption: float, avg_motorway_fuelconsumption: float) -> float:
+
+def calculate_fuel_consumption(
+    distance: float,
+    duration: str,
+    avg_city_fuelconsumption: float,
+    avg_motorway_fuelconsumption: float,
+) -> float:
     """
     @param: distance, distance that is driven
     @param: duration, how long it takes to get there, format: "x hours y mins"
@@ -35,13 +44,14 @@ def calculateFuelConsumption(distance: float, duration: str, avg_city_fuelconsum
     # Get the avg. consumption on 1 km
     avg_city_fuelconsumption /= 100
     avg_motorway_fuelconsumption /= 100
-    
-    # Convert 
+
+    # Convert
     speed: float = distance / _parse_gmaps_travelduration(duration)
 
     if speed >= 60:
         return distance * avg_motorway_fuelconsumption
     return distance * avg_city_fuelconsumption
+
 
 def _parse_gmaps_travelduration(duration: str) -> float:
     """
@@ -53,28 +63,19 @@ def _parse_gmaps_travelduration(duration: str) -> float:
 
     # Find the hours if existent
     if duration.find("hour") != -1:
-        hours: int = int(
-            re.search(
-                '([1-9][0-9]?) hours?',
-                duration
-            ).group(1)
-        )
+        hours: int = int(re.search("([1-9][0-9]?) hours?", duration).group(1))
         # Check for impossible results
         if hours >= 24:
             raise ValueError("Faulty duration")
 
         total_hours += hours
-    
+
     # Find the minutes
-    minutes: int = int(
-        re.search(
-            "([0-9][0-9]?) mins?",
-            duration
-        ).group(1)
-    )
-    
+    minutes: int = int(re.search("([0-9][0-9]?) mins?", duration).group(1))
+
     # Convert minutes to hours and add to total
-    # TODO: For docs, there is no need to account for minutes higher than 59, the API would have returned it in hours instead
+    # TODO: For docs, there is no need to account for minutes higher than 59,
+    # it can't overflow
     total_hours += minutes / 60
 
     return total_hours
