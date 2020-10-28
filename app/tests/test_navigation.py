@@ -1,5 +1,6 @@
 from unittest import TestCase
 from app.navigation import navigation
+from app.models import models
 from os.path import join, dirname
 from os import getenv
 from dotenv import load_dotenv
@@ -12,12 +13,12 @@ class TestNavigation(TestCase):
         self.api_key = getenv("GOOGLE_API_KEY")
 
     def test_distance_matrix(self):
-        origins = ("50.1415865", "8.8984939")
+        origins = models.Coordinate(latitude="50.1415865", longitude="8.8984939")
 
         destinations = [
-            ("50.1350588", "8.917969800000002"),
-            ("50.14437", "8.7201301"),
-            ("50.121089", "8.6875334"),
+            models.Coordinate(latitude="50.1350588", longitude="8.917969800000002"),
+            models.Coordinate(latitude="50.14437", longitude="8.7201301"),
+            models.Coordinate(latitude="50.121089", longitude="8.6875334")
         ]
 
         res = navigation.get_distance_matrix(origins, destinations, self.api_key)
@@ -53,7 +54,6 @@ class TestNavigation(TestCase):
         }
 
         self.assertEqual(res, expected_res)
-        print(res)
 
     def test_calculate_fuel_consumption(self):
         res_city: float = navigation.calculate_fuel_consumption(2000, 140, 10, 7)
