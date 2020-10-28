@@ -1,7 +1,6 @@
 import googlemaps
-from typing import List, Tuple
-
-
+from typing import List
+from app.models import models
 # from aiogmaps import Client
 # import asyncio
 # async def getDistanceMatrix(current_lat: str, current_lng: str, dest: List[Tuple[str, str]], api_key: str):
@@ -13,7 +12,7 @@ from typing import List, Tuple
 
 
 def get_distance_matrix(
-    current_pos: Tuple[str, str], destinations: List[Tuple[str, str]], api_key: str,
+    current_pos: models.Coordinate, destinations: List[models.Coordinate], api_key: str,
 ) -> dict:
     """
     Gets the distance matrix from the Google Maps distance matrix API
@@ -23,6 +22,7 @@ def get_distance_matrix(
     Args:
         current_pos: Tuple of the latitude and longitude of the current position
         destinations: List of the destinations, these are tuples of the latitude and longitude
+        api_key: Google Maps API key
 
     Returns:
         Response from the Google Maps API containing full address of the positions, distance, duration
@@ -30,8 +30,8 @@ def get_distance_matrix(
     Raises:
         RuntimeError: Google Maps API returned an error
     """
-    current_coords = f"{current_pos[0]}, {current_pos[1]}"
-    destinations = [f"{dest_lat}, {dest_lng}" for dest_lat, dest_lng in destinations]
+    current_coords = f"{current_pos.latitude}, {current_pos.longitude}"
+    destinations = [f"{coord.latitude}, {coord.longitude}" for coord in destinations]
 
     gmaps = googlemaps.Client(key=api_key)
 
