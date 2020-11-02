@@ -1,7 +1,21 @@
 from fastapi import FastAPI
+from app.petrolprices import prices
+from app.models import models
+from app.navigation import navigation
+from os.path import join, dirname
+from os import getenv
+from dotenv import load_dotenv
+
 
 # TODO: Consider switching to async
 app = FastAPI()
+
+
+dotenv_path = join(dirname(__file__), '.env')
+load_dotenv(dotenv_path)
+
+GOOGLE_API_KEY = getenv('GOOGLE_API_KEY')
+TANKERKOENIG_API_KEY = getenv('TANKERKOENIG_API_KEY')
 
 
 @app.get("/version")
@@ -9,6 +23,8 @@ async def version():
     return {"message": "Testversion, nothing works yet"}
 
 
-@app.get("/find/", status_code=501)
+@app.get("/find/")
 def find_petrol_stations(lat: str, lng: str, fueltype: str, rad: float):
-    return {"ok": False, "implementationStatus": "not implemented yet"}
+    current_pos: models.Coordinate = models.Coordinate(latitude=lat, longitude=lng)
+    petrol_stations = prices.get_nearest_stations(current_pos, rad, fueltype, apikey=TANKERKOENIG_API_KEY)
+    return {"ok": True, "petrolStations": petrol_stations}
