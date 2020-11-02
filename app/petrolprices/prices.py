@@ -2,7 +2,7 @@ import requests
 from app.models import models
 
 
-def get_nearest_stations(positon: models.Coordinate, rad: float, fueltype: str, apikey: str) -> dict:
+def get_nearest_stations(positon: models.Coordinate, rad: float, fueltype: str, apikey: str) -> models.PetrolStations:
     """
     Fetches all petrol stations in a certain radius from a position and returns their prices
 
@@ -40,4 +40,5 @@ def get_nearest_stations(positon: models.Coordinate, rad: float, fueltype: str, 
     if prices["ok"] != "true" and prices["status"] != "ok":
         raise RuntimeError("Pricing API returned data error")
 
-    return prices
+    prices_model = models.PetrolStations(**prices)
+    return prices_model
