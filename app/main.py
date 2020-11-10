@@ -6,6 +6,8 @@ from os.path import join, dirname
 from os import getenv
 from dotenv import load_dotenv
 
+from pprint import pprint
+
 
 # TODO: Consider switching to async
 app = FastAPI()
