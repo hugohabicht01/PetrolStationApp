@@ -10,6 +10,10 @@ from app.models import models
 #         resp = await client.distance_matrix(origins=current_coords, destinations=dest)
 #         return resp
 
+def find_distances_and_fuelconsumption(current_pos: models.Coordinate, petrol_stations: models.PetrolStations, fueltype: models.Fuel, api_key: str, radius: float) -> models.GMaps_response:
+    """TODO: Finish the function"""
+    pass
+
 
 def get_distance_matrix(
     current_pos: models.Coordinate, destinations: List[models.Coordinate], api_key: str,
