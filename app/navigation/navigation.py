@@ -1,17 +1,11 @@
 import googlemaps
 from typing import List
 from app.models import models
-# from aiogmaps import Client
-# import asyncio
-# async def getDistanceMatrix(current_lat: str, current_lng: str, dest: List[Tuple[str, str]], api_key: str):
-#     current_coords = f"{current_lat}, {current_lng}"
-#     dest = [f"{dest_lat}, {dest_lng}" for dest_lat, dest_lng in dest]
-#     async with Client(api_key) as client:
-#         resp = await client.distance_matrix(origins=current_coords, destinations=dest)
-#         return resp
+
 
 def find_distances_and_fuelconsumption(current_pos: models.Coordinate, petrol_stations: models.PetrolStations, fueltype: models.Fuel, api_key: str, radius: float) -> models.GMaps_response:
     """TODO: Finish the function"""
+
     pass
 
 
@@ -40,11 +34,12 @@ def get_distance_matrix(
     gmaps = googlemaps.Client(key=api_key)
 
     gmaps_distance_matrix = gmaps.distance_matrix(origins=current_coords, destinations=destinations)
+    gmaps_distance_matrix_model = models.GMaps_response(**gmaps_distance_matrix)
 
-    if gmaps_distance_matrix['status'] != 'OK':
-        raise RuntimeError('Google Maps API returned an error')
+    # if gmaps_distance_matrix['status'] != 'OK':
+        # raise RuntimeError('Google Maps API returned an error')
 
-    return gmaps_distance_matrix
+    return gmaps_distance_matrix_model
 
 
 def calculate_fuel_consumption(
