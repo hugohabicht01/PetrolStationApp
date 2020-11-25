@@ -4,6 +4,7 @@ from app.models import models
 from os.path import join, dirname
 from os import getenv
 from dotenv import load_dotenv
+from pprint import pprint
 
 
 class TestNavigation(TestCase):
@@ -13,6 +14,7 @@ class TestNavigation(TestCase):
         self.api_key = getenv("GOOGLE_API_KEY")
 
     def test_distance_matrix(self):
+        # TODO: Mock the API call
         origins = models.Coordinate(latitude="50.1415865", longitude="8.8984939")
 
         destinations = [
@@ -21,7 +23,7 @@ class TestNavigation(TestCase):
             models.Coordinate(latitude="50.121089", longitude="8.6875334")
         ]
 
-        res = navigation.get_distance_matrix(origins, destinations, self.api_key)
+        res = navigation.get_distance_matrix(origins, destinations, self.api_key).dict()
         expected_res = {
             "destination_addresses": [
                 "Am Freiheitspl. 14, 63450 Hanau, Germany",
@@ -52,8 +54,25 @@ class TestNavigation(TestCase):
             ],
             "status": "OK",
         }
+        # expected_res: models.GMaps_response = models.GMaps_response(
+        #     destination_addresses=[
+        #         "Am Freiheitspl. 14, 63450 Hanau, Germany",
+        #         "Im Staffel 109, 60389 Frankfurt am Main, Germany",
+        #         "Hebelstraße 15, 60318 Frankfurt am Main, Germany",
+        #     ],
+        #     origin_addresses=[
+        #         "Händelstraße 10, 63452 Hanau, Germany"
+        #     ],
+        #     row=[
+        #         models.Row()
+        #     ],
+        #     status="OK"
+        # )
 
-        self.assertEqual(res, expected_res)
+        pprint(res)
+        print("="*80)
+        pprint(expected_res)
+        # self.assertEqual(res, expected_res)
 
     def test_calculate_fuel_consumption(self):
         res_city: float = navigation.calculate_fuel_consumption(2000, 140, 10, 7)
