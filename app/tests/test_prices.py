@@ -20,5 +20,5 @@ class TestPriceFetching(TestCase):
             self.api_key
         )
 
-        self.assertEqual(res["ok"], True)
-        self.assertEqual(res["status"], 'ok')
+        self.assertEqual(res.ok, True)
+        self.assertEqual(res.status, 'ok')

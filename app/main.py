@@ -31,15 +31,6 @@ def find_petrol_stations(lat: str, lng: str, fueltype: str, rad: float):
     current_pos: models.Coordinate = models.Coordinate(latitude=lat, longitude=lng)
     petrol_stations: models.PetrolStations = prices.get_nearest_stations(current_pos, rad, fueltype, apikey=TANKERKOENIG_API_KEY)
 
-    destinations: List[models.Coordinate]
-    station: models.PetrolStation
 
-    for station in petrol_stations.stations:
-        destinations.append(
-            models.Coordinate(
-                lat=station.lat,
-                lng=station.lng
-            )
-        )
     distances = navigation.get_distance_matrix(current_pos, destinations, TANKERKOENIG_API_KEY)
     return {"ok": True, "petrolStations": petrol_stations}
