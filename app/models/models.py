@@ -14,6 +14,7 @@ class Coordinate(BaseModel):
     latitude: float
     longitude: float
 
+
 class Fuel(BaseModel):
     fueltype: str
 
@@ -46,7 +47,7 @@ class Row(BaseModel):
     elements: List[Element]
 
 
-class GMaps_response(BaseModel):
+class GMapsResponse(BaseModel):
     destination_addresses: List[str]
     origin_addresses: List[str]
     rows: List[Row]
@@ -78,12 +79,3 @@ class PetrolStations(BaseModel):
     data: str
     status: str
     stations: List[PetrolStation]
-
-
-# class PetrolStationWithPrices(BaseModel):
-#     station: PetrolStation 
-#     fuel_to_get_there: float
-#     price_to_get_there: float
-#     price_overall: float
-#     distance: Distance
-#     duration: Duration

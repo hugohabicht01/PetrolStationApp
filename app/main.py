@@ -5,14 +5,10 @@ from app.navigation import navigation
 from os.path import join, dirname
 from os import getenv
 from dotenv import load_dotenv
-from typing import List
-
-from pprint import pprint
-
+import uvicorn
 
 # TODO: Consider switching to async
 app = FastAPI()
-
 
 dotenv_path = join(dirname(__file__), '.env')
 load_dotenv(dotenv_path)
@@ -29,8 +25,12 @@ async def version():
 @app.get("/find/")
 def find_petrol_stations(lat: str, lng: str, fueltype: str, rad: float):
     current_pos: models.Coordinate = models.Coordinate(latitude=lat, longitude=lng)
-    petrol_stations: models.PetrolStations = prices.get_nearest_stations(current_pos, rad, fueltype, apikey=TANKERKOENIG_API_KEY)
+    petrol_stations: models.PetrolStations = prices.get_nearest_stations(current_pos, rad, fueltype,
+                                                                         apikey=TANKERKOENIG_API_KEY)
+
+    petrol_stations_nearby = navigation.find_distances_and_fuelconsumption(current_pos, petrol_stations, GOOGLE_API_KEY)
+    return {"ok": True, "petrolStations": petrol_stations_nearby}
 
 
-    distances = navigation.get_distance_matrix(current_pos, destinations, TANKERKOENIG_API_KEY)
-    return {"ok": True, "petrolStations": petrol_stations}
+if __name__ == "__main__":
+    uvicorn.run(app, host="0.0.0.0", port=8000)
