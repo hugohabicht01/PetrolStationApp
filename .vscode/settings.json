@@ -1,0 +1,15 @@
+{
+    "vim.insertModeKeyBindings": [
+        {
+            "before": ["j", "k"],
+            "after": ["<Esc>"]
+        },
+    ],
+    "vim.useSystemClipboard": true,
+    "editor.fontFamily": "FiraCode Nerd Font",
+    "workbench.colorTheme": "Oceanic Next",
+    "editor.lineNumbers": "relative",
+    "window.titleBarStyle": "custom",
+    "terminal.integrated.fontFamily": "FiraCode Nerd Font",
+    "python.pythonPath": "/home/linuxer/.local/share/virtualenvs/PetrolStationApp-gUDhT0Ti"
+}

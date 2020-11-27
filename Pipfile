@@ -17,3 +17,5 @@ python_version = "3.8"
 [scripts]
 dev = "uvicorn app.main:app --reload"
 test = "python3 -m unittest discover -v app/tests"
+
+[dev-packages]

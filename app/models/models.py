@@ -4,6 +4,13 @@ from typing import List
 
 
 class Coordinate(BaseModel):
+    """
+    Coordinate datatype with latitude and longitude
+    
+    Args:
+        latitude: Latitude of a coordinate
+        longitude: Longitude of a coordinate
+    """
     latitude: float
     longitude: float
 
@@ -12,7 +19,9 @@ class Fuel(BaseModel):
 
     @validator('fueltype')
     def check_valid_fueltype(cls, v):
-        if v != 'diesel' or v != 'e5' or v != 'e10':
+        # Make sure that the fueltype is supported
+        supported_fueltypes = ['diesel', 'e5', 'e10']
+        if v not in supported_fueltypes:
             raise ValueError('Wrong fueltype')
         return v
 
@@ -56,6 +65,11 @@ class PetrolStation(BaseModel):
     houseNumber: str
     postCode: int
 
+    fuel_to_get_there: float = None
+    price_to_get_there: float = None
+    price_overall: float = None
+    distance: Distance = None
+    duration: Duration = None
 
 
 class PetrolStations(BaseModel):
@@ -65,3 +79,11 @@ class PetrolStations(BaseModel):
     status: str
     stations: List[PetrolStation]
 
+
+# class PetrolStationWithPrices(BaseModel):
+#     station: PetrolStation 
+#     fuel_to_get_there: float
+#     price_to_get_there: float
+#     price_overall: float
+#     distance: Distance
+#     duration: Duration

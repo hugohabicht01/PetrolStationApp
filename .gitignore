@@ -1,12 +1,6 @@
-# File from playing and trying out some APIs
-directionsapitesting.py
-
 # Python gitignore
 .env
 __pycache__/
-
-# VSCode Settings
-.vscode/
 
 # Jetbrains IDEs settings
 .idea/
