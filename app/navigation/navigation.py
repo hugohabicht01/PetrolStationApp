@@ -1,28 +1,20 @@
 import googlemaps
 from typing import List
 from app.models import models
-# from aiogmaps import Client
-# import asyncio
-# async def getDistanceMatrix(current_lat: str, current_lng: str, dest: List[Tuple[str, str]], api_key: str):
-#     current_coords = f"{current_lat}, {current_lng}"
-#     dest = [f"{dest_lat}, {dest_lng}" for dest_lat, dest_lng in dest]
-#     async with Client(api_key) as client:
-#         resp = await client.distance_matrix(origins=current_coords, destinations=dest)
-#         return resp
+import operator
 
 
 def find_distances_and_fuelconsumption(
-    current_pos: models.Coordinate,
-    petrol_stations: models.PetrolStations,
-    fueltype: models.Fuel,
-    api_key: str,
-    radius: float,
+        current_pos: models.Coordinate,
+        petrol_stations: models.PetrolStations,
+        api_key: str,
 ):
     """TODO: Finish the function"""
-    # TODO: I just made these values constant, need to add something to adjust them manually
-    # TODO: This whole function is extremly ugly and bad code, PLS CLEAN THIS UP FFS
-    # Just add some classes and do all the stations thingies object oriented, will be way cleaner than this mess
-    # Whoever this reads, sorry for the offensive language, but programming can sometimes make us all a bit salty if not everything is working how we want it to work
+    # TODO: I just made these values constant, need to add something to adjust them manually TODO: This whole
+    #  function is extremly ugly and bad code, PLS CLEAN THIS UP FFS Just add some classes and do all the stations
+    #  thingies object oriented, will be way cleaner than this mess Whoever this reads, sorry for the offensive
+    #  language, but programming can sometimes make us all a bit salty if not everything is working how we want it to
+    #  work
     AVG_CITY_FUELCONSUMPTION = 7
     AVG_MOTORWAY_FUELCONSUMPTION = 12
 
@@ -30,47 +22,43 @@ def find_distances_and_fuelconsumption(
     # THIS NEEDS A WAY OF CHANGING IT. YOU DONT ALWAYS WANT TO FILL UP 10 LITERS!!!
     TANK_FILL_NEEDED = 10
 
-
     stations_coords = []
-    stations = []
-    for station in petrol_stations:
-        stations_coords.append(models.Coordinate(lat=station.lat, lng=station.lng))
-        # stations.append(
-        #     models.PetrolStationWithPrices(
-        #         station=models.PetrolStation(
-        #             lat=station.lat,
-        #             lng=station.lng
-        #         )
-        #     )
-        # )
-    distances: models.GMaps_response = get_distance_matrix(
+    for station in petrol_stations.stations:
+        stations_coords.append(models.Coordinate(latitude=station.lat, longitude=station.lng))
+
+    distances: models.GMapsResponse = get_distance_matrix(
         current_pos, stations_coords, api_key
     )
 
-    for i, station in enumerate(distances.rows[0].elements):
+    for i, nav_station in enumerate(distances.rows[0].elements):
         # Assign the real distance, not what the Tankerkoenig api returned, that is probably the straight line distance
         # TODO: Investigate the statement above
-        petrol_stations.stations[i].distance = station.distance.value
+        petrol_stations.stations[i].distance = nav_station.distance
         # Journey time
-        petrol_stations.stations[i].duration = station.duration.value
+        petrol_stations.stations[i].duration = nav_station.duration
 
         petrol_stations.stations[i].fuel_to_get_there = calculate_fuel_consumption(
-            petrol_stations.stations[i].duration,
-            petrol_stations.stations[i].duration,
+            petrol_stations.stations[i].distance.value,
+            petrol_stations.stations[i].duration.value,
             AVG_CITY_FUELCONSUMPTION,
             AVG_MOTORWAY_FUELCONSUMPTION,
         )
 
-        petrol_stations.stations[i].price_to_get_there = petrol_stations.stations[i].price * petrol_stations.stations[i].fuel_to_get_there
-        #
-        petrol_stations.stations[i].price_overall =
+        petrol_stations.stations[i].price_to_get_there = petrol_stations.stations[i].price * petrol_stations.stations[
+            i].fuel_to_get_there
+        # Calculate how much you would spend in case you would fill your tank at that station
+        petrol_stations.stations[i].price_overall = petrol_stations.stations[i].price_to_get_there * \
+                                                    petrol_stations.stations[i].price * TANK_FILL_NEEDED
+
+        petrol_stations_sorted = sorted(petrol_stations.stations, key=operator.attrgetter('price_overall'))
+        return petrol_stations_sorted
 
 
 def get_distance_matrix(
-    current_pos: models.Coordinate,
-    destinations: List[models.Coordinate],
-    api_key: str,
-) -> models.GMaps_response:
+        current_pos: models.Coordinate,
+        destinations: List[models.Coordinate],
+        api_key: str,
+) -> models.GMapsResponse:
     """
     Gets the distance matrix from the Google Maps distance matrix API
 
@@ -96,19 +84,19 @@ def get_distance_matrix(
         origins=current_coords, destinations=destinations
     )
 
-    if gmaps_distance_matrix["status"] != "OK":
-        raise RuntimeError("Google Maps API returned an error")
+    gmaps_distance_matrix_model = models.GMapsResponse(**gmaps_distance_matrix)
 
-    gmaps_distance_matrix_model = models.GMaps_response(**gmaps_distance_matrix)
+    if gmaps_distance_matrix_model.status != "OK":
+        raise RuntimeError("Google Maps API returned an error")
 
     return gmaps_distance_matrix_model
 
 
 def calculate_fuel_consumption(
-    distance: int,
-    duration: int,
-    avg_city_fuelconsumption: float,
-    avg_motorway_fuelconsumption: float,
+        distance: int,
+        duration: int,
+        avg_city_fuelconsumption: float,
+        avg_motorway_fuelconsumption: float,
 ) -> float:
     """
     Estimates the fuel consumption of your car
