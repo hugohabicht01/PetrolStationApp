@@ -50,8 +50,9 @@ def find_distances_and_fuelconsumption(
         petrol_stations.stations[i].price_overall = petrol_stations.stations[i].price_to_get_there * \
                                                     petrol_stations.stations[i].price * TANK_FILL_NEEDED
 
-        petrol_stations_sorted = sorted(petrol_stations.stations, key=operator.attrgetter('price_overall'))
-        return petrol_stations_sorted
+    petrol_stations_sorted = sorted(petrol_stations.stations, key=operator.attrgetter('price_overall'))
+
+    return petrol_stations_sorted
 
 
 def get_distance_matrix(
