@@ -14,7 +14,7 @@ class TestNavigation(TestCase):
         self.api_key = getenv("GOOGLE_API_KEY")
 
     def test_distance_matrix(self):
-        # TODO: Mock the API call
+        # TODO: #6 Mock the API call
         origins = models.Coordinate(latitude="50.1415865", longitude="8.8984939")
 
         destinations = [
