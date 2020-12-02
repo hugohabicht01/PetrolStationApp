@@ -7,20 +7,23 @@ import operator
 def find_distances_and_fuelconsumption(
         current_pos: models.Coordinate,
         petrol_stations: models.PetrolStations,
+        tankfill: float,
+        avg_city_fuelconsumption: float,
+        avg_motorway_fuelconsumption: float,
         api_key: str,
 ):
     """TODO: Finish the function"""
-    # TODO: I just made these values constant, need to add something to adjust them manually TODO: This whole
+    # TODO: #11 I just made these values constant, need to add something to adjust them manually TODO: This whole
     #  function is extremly ugly and bad code, PLS CLEAN THIS UP FFS Just add some classes and do all the stations
     #  thingies object oriented, will be way cleaner than this mess Whoever this reads, sorry for the offensive
     #  language, but programming can sometimes make us all a bit salty if not everything is working how we want it to
     #  work
-    AVG_CITY_FUELCONSUMPTION = 7
-    AVG_MOTORWAY_FUELCONSUMPTION = 12
+    # AVG_CITY_FUELCONSUMPTION = 7
+    # AVG_MOTORWAY_FUELCONSUMPTION = 12
 
     # TODO: Although I hate myself for doing this, to just get something working, I'm gonna set this constant
     # THIS NEEDS A WAY OF CHANGING IT. YOU DONT ALWAYS WANT TO FILL UP 10 LITERS!!!
-    TANK_FILL_NEEDED = 10
+    # TANK_FILL_NEEDED = 10
 
     stations_coords = []
     for station in petrol_stations.stations:
@@ -31,24 +34,23 @@ def find_distances_and_fuelconsumption(
     )
 
     for i, nav_station in enumerate(distances.rows[0].elements):
-        # Assign the real distance, not what the Tankerkoenig api returned, that is probably the straight line distance
-        # TODO: Investigate the statement above
+        # Assign the real distance, not what the Tankerkoenig api returned, that is the straight line distance
         petrol_stations.stations[i].distance = nav_station.distance
         # Journey time
         petrol_stations.stations[i].duration = nav_station.duration
 
-        petrol_stations.stations[i].fuel_to_get_there = calculate_fuel_consumption(
+        petrol_stations.stations[i].fuel_to_get_there, petrol_stations.stations[i].avg_speed = calculate_fuel_consumption(
             petrol_stations.stations[i].distance.value,
             petrol_stations.stations[i].duration.value,
-            AVG_CITY_FUELCONSUMPTION,
-            AVG_MOTORWAY_FUELCONSUMPTION,
+            avg_city_fuelconsumption,
+            avg_motorway_fuelconsumption,
         )
 
         petrol_stations.stations[i].price_to_get_there = petrol_stations.stations[i].price * petrol_stations.stations[
             i].fuel_to_get_there
         # Calculate how much you would spend in case you would fill your tank at that station
         petrol_stations.stations[i].price_overall = petrol_stations.stations[i].price_to_get_there * \
-                                                    petrol_stations.stations[i].price * TANK_FILL_NEEDED
+                                                    petrol_stations.stations[i].price * tankfill
 
     petrol_stations_sorted = sorted(petrol_stations.stations, key=operator.attrgetter('price_overall'))
 
@@ -114,6 +116,7 @@ def calculate_fuel_consumption(
 
     Returns:
         Estimated fuel consumed in liters
+        Average speed in km/h
     """
     # Get the avg. consumption on 1 km
     avg_city_fuelconsumption /= 100
@@ -123,5 +126,5 @@ def calculate_fuel_consumption(
     speed: float = (distance / duration) * 3.6
 
     if speed >= 60:
-        return (distance / 1000) * avg_motorway_fuelconsumption
-    return (distance / 1000) * avg_city_fuelconsumption
+        return (distance / 1000) * avg_motorway_fuelconsumption, speed
+    return (distance / 1000) * avg_city_fuelconsumption, speed

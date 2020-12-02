@@ -60,6 +60,7 @@ class PetrolStation(BaseModel):
     brand: str
     lat: float
     lng: float
+    # Might wanna use an alias for this and call this straightlinedistance
     dist: float
     price: float
     isOpen: bool
@@ -69,6 +70,7 @@ class PetrolStation(BaseModel):
     fuel_to_get_there: float = None
     price_to_get_there: float = None
     price_overall: float = None
+    avg_speed: float = None
     distance: Distance = None
     duration: Duration = None
 

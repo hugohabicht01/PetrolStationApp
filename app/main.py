@@ -23,12 +23,12 @@ async def version():
 
 
 @app.get("/find/")
-def find_petrol_stations(lat: str, lng: str, fueltype: str, rad: float):
+def find_petrol_stations(lat: str, lng: str, fueltype: str, rad: float, tankfill: int, avg_city: float = 7.2, avg_motorway: float = 12):
     current_pos: models.Coordinate = models.Coordinate(latitude=lat, longitude=lng)
     petrol_stations: models.PetrolStations = prices.get_nearest_stations(current_pos, rad, fueltype,
                                                                          apikey=TANKERKOENIG_API_KEY)
 
-    petrol_stations_nearby = navigation.find_distances_and_fuelconsumption(current_pos, petrol_stations, GOOGLE_API_KEY)
+    petrol_stations_nearby = navigation.find_distances_and_fuelconsumption(current_pos, petrol_stations, tankfill, avg_city, avg_motorway,GOOGLE_API_KEY)
     return {"ok": True, "petrolStations": petrol_stations_nearby}
 
 
