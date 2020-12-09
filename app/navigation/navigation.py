@@ -13,17 +13,14 @@ def find_distances_and_fuelconsumption(
         api_key: str,
 ):
     """TODO: Finish the function"""
-    # TODO: #11 I just made these values constant, need to add something to adjust them manually TODO: This whole
+    #  TODO: This whole
     #  function is extremly ugly and bad code, PLS CLEAN THIS UP FFS Just add some classes and do all the stations
     #  thingies object oriented, will be way cleaner than this mess Whoever this reads, sorry for the offensive
     #  language, but programming can sometimes make us all a bit salty if not everything is working how we want it to
     #  work
-    # AVG_CITY_FUELCONSUMPTION = 7
-    # AVG_MOTORWAY_FUELCONSUMPTION = 12
 
     # TODO: Although I hate myself for doing this, to just get something working, I'm gonna set this constant
     # THIS NEEDS A WAY OF CHANGING IT. YOU DONT ALWAYS WANT TO FILL UP 10 LITERS!!!
-    # TANK_FILL_NEEDED = 10
 
     stations_coords = []
     for station in petrol_stations.stations:
