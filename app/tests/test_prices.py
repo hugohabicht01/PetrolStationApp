@@ -7,6 +7,7 @@ from dotenv import load_dotenv
 
 
 class TestPriceFetching(TestCase):
+    # TODO: Add proper unittests that test with failing and succeding testcases while mocking the actual API
     def setUp(self):
         dotenv_path = join(dirname(__file__), '.env')
         load_dotenv(dotenv_path)
