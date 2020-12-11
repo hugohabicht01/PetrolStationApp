@@ -26,5 +26,12 @@ This problem can be solved easiest by a program because of the following reasons
 
 
 ## Design
+This solution consist of two different main parts:
+![Basic architecture](architecture.jpeg)
+
+The separation between the API Server itself and the server that delivers the static files (html, css and js files) ensures that making changes, when the solution is running in production, is easy since the logic is separeted from the frontend and how it looks. 
+If I would use a Backend that delivers the static files and does the logic as well it wouldn't scale well if you had to deploy it on more servers to balance the load.
+Additionally this ensures that you can have different frontends (mobile app and website for example) that have the same logic without having to implement it twice.
+Another pro for this architecture is that you could have different CDNs so that you get the static files form the geographical nearest CDN with increases the load speed.
 
 ## Development
