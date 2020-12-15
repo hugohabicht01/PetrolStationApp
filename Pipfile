@@ -11,9 +11,10 @@ fastapi = "*"
 uvicorn = "*"
 pydantic = "*"
 responses = "*"
+flake8 = "*"
 
 [requires]
-python_version = "3.8"
+python_version = "3.9"
 
 [scripts]
 dev = "uvicorn app.main:app --reload"
