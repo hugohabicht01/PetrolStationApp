@@ -97,7 +97,7 @@ def calculate_fuel_consumption(
         duration: int,
         avg_city_fuelconsumption: float,
         avg_motorway_fuelconsumption: float,
-) -> float:
+) -> (float, float):
     """
     Estimates the fuel consumption of your car
 

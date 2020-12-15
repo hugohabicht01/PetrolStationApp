@@ -5,8 +5,8 @@
 
 ### Outline of the project and Background
 
-In Germany we live very close to a petrol station that is however usually very expensive. That is why my father tends to look for cheaper ones and often drives several miles to fill up his car. I have often wondered whether these trips to the filling station aren't  more expensive than the amount he saved by filling up with the lower petrol price.
-So I got on the idea to write an application that will identify the 25 cheapest filling stations in  a predefined radius and set off the travel costs against the savings and so present to the user the optimized result in deciding which filling station would in fact be his cheapest option.
+In Germany my family lives quite close to a petrol station that is however usually very expensive. My father thus tends to look for cheaper ones and often drives several miles to fill up one of his cars. I have often wondered whether these trips to the filling station aren't  more expensive than the amount he saved by filling up with the lower petrol price. I had a look at the available apps and websites, but none of them seemed to answer my question.
+So I had the idea to write an application that will identify the 25 cheapest filling stations in  a predefined radius and set off the travel costs against the savings and so present to the user the optimized result in deciding which filling station would in fact be his cheapest option.
 The user can choose the geographical radius, the type of fuel that his car uses and the amount of fuel he probably needs (e.g a complete filling, half a tank, a quarter, exact litres etc.). Additionally there needs to be some way of specifying the average mileage per 100km. 
 The app then calculates which filling station within the predefined radius would be the best solution in terms of a price/performance ratio, i.e. it solves the problem if a cheaper filling station further away would be worth the trip compared to a more expensive one nearby or not. 
 
@@ -30,7 +30,7 @@ This problem can be solved easiest by a program because of the following reasons
 
 ### Similar solutions
 Before starting with my own project I researched all available apps for a similar purpose on the German market. These are native mobile phone applications, and some provide an app as well as a website.
-- Tankerkönig:  
+#### Tankerkönig:  
 Screenshot of their startsite:
 ![Tankerkönig Startsite](images/tankerkönig_start.jpg)
 Screenshot of their results page:
@@ -39,13 +39,13 @@ Website: https://www.tankerkoenig.de
 This website displays a map of the current users position with little flags indicating all available and open filling stations in the specified radius and their live price. Next to it there is a list of all the stations sorted by price or distance. The selected start location is rather basic, no exact address can be put in, but only a postcode. This is makes the app rather inexact since postcodes usually cover areas of several squarekilometers.
 However this site has one big advantage which is that they expose a public API, used by my project.
 
-- T Online:  
+#### T Online:  
 Screenshot of their startsite which is also the results page:
 ![T Online](images/tonline_start.jpg)
 Website: https://tanken.t-online.de/  
 Like the Tankerkönig webpage this also displays a map with all available petrol stations within a selected radius, their price for the selected fuel and if they are open, all centered around the selected starting point. This point however can be an exact address or it can try to work out your geolocation by itself if you grant the permission. This makes it a lot more precise and therefore useful than the Tankerkönig webpage. Additionally, like the Tankerkönig website it displays a list of all petrol stations sorted by price or distance. This website highlights the cheapest station and the nearest station out of all the found stations. 
 
-- TankenTanken:  
+#### TankenTanken:  
 Screenshot of their startpage:
 ![TankenTanken Startpage](images/tankentanken_start.jpg)
 Screenshot of their results page:
@@ -56,24 +56,36 @@ Like the two previous webpages this website displays a list of all open and avai
 They also offer an app with similar features:
 ![TankenTanken App](images/tankentanken_app.png)
 
-- Ich Tanke:  
+#### Ich Tanke:  
 Screenshot of their startpage:
 ![Ich Tanke Startpage](images/ichtanke_start.jpg)
 Screenshot of their results page:
 ![Ich Tanke results](images/ichtanke_search.jpg)  
 Website: https://ich-tanke.de/  
 This website offers a list of all petrol stations nearby, without the possibility to choose a radius, and their live prices. Like the one before it lacks a proper map, it only displays one if you click on "Karte" (German for "map"). You cannot specify an exact starting point, only a postcode. Unlike all the other ones you can't select the sorting method, it is presorted by price. It displays a graph of the current and past prices and gives a recommendation at what timeperiod it is wise to fill up your car during the day.
-- clever-tanken:  
+#### clever-tanken:  
 Screenshot of their startpage:
 ![Clever Tanken](images/clevertanken_start.jpg)
 Screenshot of their results page:
 ![Clever Tanken](images/clevertanken_search.jpg)
 Website: https://www.clever-tanken.de/  
-This seeems to be the most advanced website so far, like the other ones it enables the user to display a list of all petrol stations in a chosen radius from a starting point chosen by a street and unlikes the others allows to search for petrol stations with special fuels, among those are gas, Adblue, lorry diesel and even hydrogen. All the stations can be sorted by price, distance or alphabet. A map with all the stations can be displayed if necessary, as well as a pricehistory of all the prices during the day for each station. A login function is available as well which enables users to report recently updated or wrong prices.
+This seeems to be the most advanced website so far, like the other ones it enables the user to display a list of all petrol stations in a chosen radius from a starting point chosen by a street and unlikes the others allows to search for petrol stations with special fuels, among those are gas, Adblue, lorry diesel and even hydrogen. All the stations can be sorted by price, distance or alphabet. A map with all the stations can be displayed if necessary, as well as a price history of all the prices during the day for each station. A login function is available as well which enables users to report recently updated or wrong prices.
 This website also offers an android app with the same features:  
 ![Clevertanken App](images/clevertanken_app.jpg)
 
-TODO: Analysis with critique about the cheapest station feature
+#### Analysis of existing solutions
+All existing solutions basically comprise the following features:
+- Search for open petrol stations using these parameters:
+    - fuel type
+    - geographical radius (some use the built-in GPS/ geolocation API provided by the browser, some use an address put in by the user)
+    - starting point
+- display a list of retrieved stations and sort them by price or distance
+- display the current price for each station
+- display a map of all stations (not all websites)
+- display some sort of price history
+
+All of these solutions don't compute anything, they get data from an API, put this data into a database and when you are using the site, they send you the data, sort it and present it with a nice UI.
+They pretend to provide a solution for saving money for petrol spendings, however in fact they do not, because they don't address the fundamental problem of how to optimize the spending for petrol, since you might find the lowest price per liter, but you don't know if it's worth driving there.
 
 ### Essential features
 <!-- TODO: Elaborate and justify all of this-->
