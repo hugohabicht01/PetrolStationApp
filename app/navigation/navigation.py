@@ -46,7 +46,7 @@ def find_distances_and_fuelconsumption(
         petrol_stations.stations[i].price_to_get_there = petrol_stations.stations[i].price * petrol_stations.stations[
             i].fuel_to_get_there
         # Calculate how much you would spend in case you would fill your tank at that station
-        petrol_stations.stations[i].price_overall = petrol_stations.stations[i].price_to_get_there * \
+        petrol_stations.stations[i].price_overall = petrol_stations.stations[i].price_to_get_there + \
                                                     petrol_stations.stations[i].price * tankfill
 
     petrol_stations_sorted = sorted(petrol_stations.stations, key=operator.attrgetter('price_overall'))

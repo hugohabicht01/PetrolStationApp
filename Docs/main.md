@@ -3,16 +3,24 @@
 
 ## Analysis
 
-### Outline of the project
+### Outline of the project and Background
 
-As my computer science course work I want to write an application for users who want to refill their car as cheap as possible. The user can choose a radius in that the application should search for petrol stations, the type of fuel that his car needs and how much fuel he wants to buy. Additionally there needs to be some way of specifying how much fuel the car roughly is using on 100km. 
+In Germany we live very close to a petrol station that is however usually very expensive. That is why my father tends to look for cheaper ones and often drives several miles to fill up his car. I have often wondered whether these trips to the filling station aren't  more expensive than the amount he saved by filling up with the lower petrol price.
+So I got on the idea to write an application that will identify the 25 cheapest filling stations in  a predefined radius and set off the travel costs against the savings and so present to the user the optimized result in deciding which filling station would in fact be his cheapest option.
+The user can choose the geographical radius, the type of fuel that his car uses and the amount of fuel he probably needs (e.g a complete filling, half a tank, a quarter, exact litres etc.). Additionally there needs to be some way of specifying the average mileage per 100km. 
+The app then calculates which filling station within the predefined radius would be the best solution in terms of a price/performance ratio, i.e. it solves the problem if a cheaper filling station further away would be worth the trip compared to a more expensive one nearby or not. 
 
-The user needs to be presented with an app that shows his current position on a map as well as all fuel stations nearby in the chosen radius. Next to it there should be a list of the stations with their price, sorted by how much you would have to pay if you were to drive there (which uses up fuel -> costs money) and fill up your car with the specified amout of fuel.
+
+The user gets his current position shown on a live map as well as all fuel stations nearby in the chosen radius. Next to it there will be a list of the stations with their price, sorted by how much you would have to pay for the amount of fuel indicated if you were to drive there. 
 
 ### Stakeholders
 
-My father always drives to petrol station that are relatively far away (5km-20km) since they are way cheaper than the petrol station that is only 500m away from our house.
-I have always wondered if it actually makes sense to drive that far because you are also using petrol to get there which costs money. That is why this program should try to calculate how much petrol you are using to get to each petrol station and compare which station is cheapest with the fuel consumption in mind. This would be the perfect app for my father since he than can decide which petrol station is actually cheapest. I will stay in give him the app for feedback on a regular basis and improve on issues that he points out.
+As mentioned my father always drives to petrol stations that are relatively far away (5km-20km) from our home who offer a lower petrol price on their billboards than the one next door. So I have decided that my father is going to be my primary stakeholder. 
+He travels a lot by car and so needs a lot of petrol on a regular basis, also in other regions than where we live. So it is imperative that the application is flexible enough to not only list the petrol stations around our home but to provide a mobile solution for the whole of Germany. As he does not travel by car outside of Germany but then would rather take a plane it appears sufficient that the app does not extend futher to other countries. Should I decide to extend this application after finishing the course project  and also allow external users I would consider a further geographical extension for additional countries, but for the current project this would go beyond the scope timewise and also technically.
+Another feature he has asked for is that the application would be flexible enough to be able to switch between different mileage profiles for different car types ( e.g. luxury class vehicle, middle class vehicle)
+My father uses several smartphones and a laptop with internet access. So with different operating systems (Windows and Android) for him it would be perfect if the solution worked on both platforms, that is why I decided to make it a website-based frontend which is platform-independent so you can use it on almost all phones (Android as well as iOS), tablets and PC alike as long as they have a modern browser.
+
+I will stay in touch with him and show him the app for feedback on a regular basis as I develop it and improve on issues that he considers to be impractical or not user-friendly enough.
 
 ### Why is this problem perfect for a computational solution rather than something else?
 
@@ -21,8 +29,51 @@ This problem can be solved easiest by a program because of the following reasons
 - calculating the fuel consumption to get to a petrol station can be done easily by a computer, it just has to apply a formula, while finding the fuel consumption by hand would require you to either drive there and find it out or finding the distance and then applying the formula by hand.
 
 ### Similar solutions
+Before starting with my own project I researched all available apps for a similar purpose on the German market. These are native mobile phone applications, and some provide an app as well as a website.
+- Tankerkönig:  
+Screenshot of their startsite:
+![Tankerkönig Startsite](images/tankerkönig_start.jpg)
+Screenshot of their results page:
+![Tankerkönig Results](images/tankerkönig_search.jpg)
+Website: https://www.tankerkoenig.de  
+This website displays a map of the current users position with little flags indicating all available and open filling stations in the specified radius and their live price. Next to it there is a list of all the stations sorted by price or distance. The selected start location is rather basic, no exact address can be put in, but only a postcode. This is makes the app rather inexact since postcodes usually cover areas of several squarekilometers.
+However this site has one big advantage which is that they expose a public API, used by my project.
 
-TODO
+- T Online:  
+Screenshot of their startsite which is also the results page:
+![T Online](images/tonline_start.jpg)
+Website: https://tanken.t-online.de/  
+Like the Tankerkönig webpage this also displays a map with all available petrol stations within a selected radius, their price for the selected fuel and if they are open, all centered around the selected starting point. This point however can be an exact address or it can try to work out your geolocation by itself if you grant the permission. This makes it a lot more precise and therefore useful than the Tankerkönig webpage. Additionally, like the Tankerkönig website it displays a list of all petrol stations sorted by price or distance. This website highlights the cheapest station and the nearest station out of all the found stations. 
+
+- TankenTanken:  
+Screenshot of their startpage:
+![TankenTanken Startpage](images/tankentanken_start.jpg)
+Screenshot of their results page:
+![TankenTanken results](images/tankentanken_search.jpg)
+Website: https://tankentanken.de/  
+Like the two previous webpages this website displays a list of all open and available petrol stations in a given radius and their price. Unlike the other two this one lacks a map and only lists the name of the stations and their address so that in case one is unfamiliar with the area you might have trouble finding the station at all / you need another navigation app. If you click on a particular station on the list it will try to display a map with the location of the station, however this fails since they haven't set up the google maps API correctly.
+![Google Maps Error](images/tankentanken_error.jpg)  
+They also offer an app with similar features:
+![TankenTanken App](images/tankentanken_app.png)
+
+- Ich Tanke:  
+Screenshot of their startpage:
+![Ich Tanke Startpage](images/ichtanke_start.jpg)
+Screenshot of their results page:
+![Ich Tanke results](images/ichtanke_search.jpg)  
+Website: https://ich-tanke.de/  
+This website offers a list of all petrol stations nearby, without the possibility to choose a radius, and their live prices. Like the one before it lacks a proper map, it only displays one if you click on "Karte" (German for "map"). You cannot specify an exact starting point, only a postcode. Unlike all the other ones you can't select the sorting method, it is presorted by price. It displays a graph of the current and past prices and gives a recommendation at what timeperiod it is wise to fill up your car during the day.
+- clever-tanken:  
+Screenshot of their startpage:
+![Clever Tanken](images/clevertanken_start.jpg)
+Screenshot of their results page:
+![Clever Tanken](images/clevertanken_search.jpg)
+Website: https://www.clever-tanken.de/  
+This seeems to be the most advanced website so far, like the other ones it enables the user to display a list of all petrol stations in a chosen radius from a starting point chosen by a street and unlikes the others allows to search for petrol stations with special fuels, among those are gas, Adblue, lorry diesel and even hydrogen. All the stations can be sorted by price, distance or alphabet. A map with all the stations can be displayed if necessary, as well as a pricehistory of all the prices during the day for each station. A login function is available as well which enables users to report recently updated or wrong prices.
+This website also offers an android app with the same features:  
+![Clevertanken App](images/clevertanken_app.jpg)
+
+TODO: Analysis with critique about the cheapest station feature
 
 ### Essential features
 <!-- TODO: Elaborate and justify all of this-->
@@ -47,7 +98,7 @@ Software:
 ## Design
 This solution consist of two different main parts:
 
-![Basic architecture](architecture.jpeg)
+![Basic architecture](images/architecture.jpeg)
 
 <!-- The separation between the API Server itself and the server that delivers the static files (html, css and js files) ensures that making changes, when the solution is running in production, is easy since the logic is separeted from the frontend and how it looks. 
 If I would use a Backend that delivers the static files and does the logic as well it wouldn't scale well if you had to deploy it on more servers to balance the load.
