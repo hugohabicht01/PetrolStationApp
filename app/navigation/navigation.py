@@ -12,7 +12,6 @@ def find_distances_and_fuelconsumption(
         avg_motorway_fuelconsumption: float,
         api_key: str,
 ):
-    """TODO: Finish the function"""
     #  TODO: This whole
     #  function is extremly ugly and bad code, PLS CLEAN THIS UP FFS Just add some classes and do all the stations
     #  thingies object oriented, will be way cleaner than this mess Whoever this reads, sorry for the offensive
@@ -79,10 +78,13 @@ def get_distance_matrix(
     destinations = [f"{coord.latitude}, {coord.longitude}" for coord in destinations]
 
     gmaps = googlemaps.Client(key=api_key)
-
-    gmaps_distance_matrix = gmaps.distance_matrix(
-        origins=current_coords, destinations=destinations
-    )
+    
+    try:
+        gmaps_distance_matrix = gmaps.distance_matrix(
+            origins=current_coords, destinations=destinations
+        )
+    except googlemaps.exceptions.ApiError:
+        raise models.RadiusTooBig
 
     gmaps_distance_matrix_model = models.GMapsResponse(**gmaps_distance_matrix)
 
