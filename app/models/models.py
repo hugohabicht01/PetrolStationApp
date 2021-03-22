@@ -81,3 +81,7 @@ class PetrolStations(BaseModel):
     data: str
     status: str
     stations: List[PetrolStation]
+
+class RadiusTooBig(Exception):
+    pass
+
