@@ -1,17 +1,19 @@
 <template>
   <div id="app">
-    <img alt="Vue logo" src="./assets/logo.png">
-    <Position/>
+    <Position />
+    <Petrolstations />
   </div>
 </template>
 
 <script>
 import Position from './components/Position.vue';
+import Petrolstations from './components/Petrolstations.vue';
 
 export default {
   name: 'App',
   components: {
     Position,
+    Petrolstations,
   },
 };
 </script>
