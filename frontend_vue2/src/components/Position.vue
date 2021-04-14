@@ -1,14 +1,20 @@
 <template>
   <div>
     <button @click="setPosGPS">Find my current position!</button>
+    <div v-if="errorWithGPS">
+      Error occured while attempting to find your current position, please enter your current
+      position manually
+    </div>
     <div>or</div>
-    <p>Put in your current coordinates manually</p>
+    <p>Enter your current coordinates manually</p>
     <p>
       Latitude: <input type="text" v-model="currLat" />, Longitude:
       <input type="text" v-model="currLng" />
     </p>
     <button @click="setPosManually(currLat, currLng)">Set position</button>
-    <p>Latitude: {{ currentLatitude }}, Longitude: {{ currentLongitude }}</p>
+    <p v-if="foundCoordinates">
+      Latitude: {{ currentLatitude }}, Longitude: {{ currentLongitude }}
+    </p>
     <iframe
       width="600"
       height="450"
@@ -19,6 +25,7 @@
         'https://www.google.com/maps/embed/v1/place?key=AIzaSyD6z4WhJMY85Xgc9ZIRTMbCgr1zfSIMhUg&zoom=5&q=' +
         formattedCoords
       "
+      v-if="foundCoordinates"
     >
     </iframe>
   </div>
@@ -33,7 +40,13 @@ export default {
     currLat: 0,
     currLng: 0,
   }),
-  computed: mapGetters(['currentLatitude', 'currentLongitude', 'formattedCoords']),
+  computed: mapGetters([
+    'currentLatitude',
+    'currentLongitude',
+    'formattedCoords',
+    'errorWithGPS',
+    'foundCoordinates',
+  ]),
   methods: {
     setPosGPS: () => {
       navigator.geolocation.getCurrentPosition(
@@ -59,5 +72,4 @@ export default {
 };
 </script>
 
-<style lang="sass" scoped>
-</style>
+<style lang="sass" scoped></style>
