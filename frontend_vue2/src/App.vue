@@ -1,19 +1,19 @@
 <template>
   <div id="app">
-    <Position />
-    <Petrolstations />
+    <Position style="display: none" />
+    <SearchForm />
   </div>
 </template>
 
 <script>
 import Position from './components/Position.vue';
-import Petrolstations from './components/Petrolstations.vue';
+import SearchForm from './components/SearchForm.vue';
 
 export default {
   name: 'App',
   components: {
     Position,
-    Petrolstations,
+    SearchForm,
   },
 };
 </script>
