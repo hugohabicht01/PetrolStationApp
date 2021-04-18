@@ -44,7 +44,7 @@
         @click="showAdvanced = !showAdvanced"
         :value="advancedOptionsButtonText"
       />
-      <div class="advancedOptions" v-if="showAdvanced">
+      <div class="advancedOptions" v-show="showAdvanced">
         <div class="forminputs">
           <label for="avgConsumptionCity">Average fuelconsumption in city traffic</label>
           <input
