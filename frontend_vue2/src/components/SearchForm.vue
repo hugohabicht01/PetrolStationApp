@@ -89,6 +89,8 @@
 </template>
 
 <script>
+import store from '../store/index';
+
 export default {
   data() {
     return {
@@ -96,13 +98,20 @@ export default {
       radius: 2.0,
       tankfill: 20,
       showAdvanced: false,
-      avgConsumptionCity: 0.0,
-      avgConsumptionMotorway: 0.0,
+      avgConsumptionCity: 12.0,
+      avgConsumptionMotorway: 7.2,
     };
   },
   methods: {
     searchForStations() {
-      console.log(`Petrol: ${this.petroltype}, Radius ${this.radius}`);
+      store.commit('setFormData', {
+        petroltype: this.petroltype,
+        radius: this.radius,
+        tankfill: this.tankfill,
+        avgConsumptionCity: this.avgConsumptionCity,
+        avgConsumptionMotorway: this.avgConsumptionMotorway,
+      });
+      store.dispatch('findPetrolStations');
     },
   },
   computed: {

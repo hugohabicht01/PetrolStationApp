@@ -1,4 +1,5 @@
 from fastapi import FastAPI, HTTPException
+from fastapi.middleware.cors import CORSMiddleware
 from app.petrolprices import prices
 from app.models import models
 from app.navigation import navigation
@@ -11,6 +12,21 @@ from dotenv import load_dotenv
 # TODO: Consider switching to async
 app = FastAPI()
 print("fastapi started")
+
+origins = [
+    "http://localhost.tiangolo.com",
+    "https://localhost.tiangolo.com",
+    "http://localhost",
+    "http://localhost:8080",
+]
+
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=origins,
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
 
 dotenv_path = join(dirname(__file__), ".env")
 load_dotenv(dotenv_path)
@@ -33,8 +49,8 @@ def find_petrol_stations(
     fueltype: str,
     rad: float,
     tankfill: int,
-    avg_city: float = 7.2,
-    avg_motorway: float = 12,
+    avg_city: float = 12,
+    avg_motorway: float = 7.2,
 ):
     current_pos: models.Coordinate = models.Coordinate(latitude=lat, longitude=lng)
     petrol_stations: models.PetrolStations = prices.get_nearest_stations(

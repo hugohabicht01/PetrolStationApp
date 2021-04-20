@@ -1,6 +1,5 @@
-$ curl 'localhost:8000/find/?lat=50.123&lng=8.6812&fueltype=diesel&rad=2&tankfill=30' | jq .
-res:
-{
+let command = "$ curl 'localhost:8000/find/?lat=50.123&lng=8.6812&fueltype=diesel&rad=2&tankfill=30' | jq ."
+let res = {
   "ok": true,
   "petrolStations": [
     {

@@ -1,6 +1,6 @@
 <template>
   <div id="app">
-    <Position style="display: none" />
+    <Position />
     <SearchForm />
     <PetrolstationList />
   </div>
