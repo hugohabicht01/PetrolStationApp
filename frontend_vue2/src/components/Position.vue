@@ -35,6 +35,9 @@
 import { mapGetters } from 'vuex';
 import store from '../store/index';
 
+/* TODO: Add google maps place search with autocomplete
+ to find the position using street names instead of coordinates directly
+ */
 export default {
   data: () => ({
     currLat: 0,

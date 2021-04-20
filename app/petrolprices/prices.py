@@ -36,9 +36,7 @@ def get_nearest_stations(positon: models.Coordinate, rad: float, fueltype: str, 
         raise RuntimeError(f"Pricing API returned http error {r.status_code}")
 
     prices: dict = r.json()
-
     prices_model: models.PetrolStations = models.PetrolStations(**prices)
     if not prices_model.ok and prices_model.status != "ok":
         raise RuntimeError("Pricing API returned data error")
-
     return prices_model

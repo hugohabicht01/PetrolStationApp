@@ -1,6 +1,6 @@
 import uuid
 from pydantic import BaseModel, Field, ValidationError, validator
-from typing import List
+from typing import List, Union
 
 
 class Coordinate(BaseModel):
@@ -53,6 +53,7 @@ class GMapsResponse(BaseModel):
     rows: List[Row]
     status: str
 
+Price = Union[float, None]
 
 class PetrolStation(BaseModel):
     id: uuid.UUID
@@ -62,7 +63,7 @@ class PetrolStation(BaseModel):
     lng: float
     # Might wanna use an alias for this and call this straightlinedistance
     dist: float
-    price: float
+    price: Price
     isOpen: bool
     houseNumber: str
     postCode: int
