@@ -21,3 +21,8 @@ dev = "uvicorn app.main:app --reload"
 test = "python3 -m unittest discover -v app/tests"
 
 [dev-packages]
+black = "*"
+rope = "*"
+
+[pipenv]
+allow_prereleases = true

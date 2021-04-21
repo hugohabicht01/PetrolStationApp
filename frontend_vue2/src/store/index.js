@@ -55,13 +55,15 @@ const store = new Vuex.Store({
       const lng = state.currentCoordinates.longitude;
       return `${lat},${lng}`;
     },
-    apiCallSuccess: (state) => state.apiData.ok,
+    apiCallSuccess: (state) => state.apiData.ok === true,
     getStations: (state) => state.apiData.petrolStations,
   },
   actions: {
     findPetrolStations({ commit, state }) {
       // TODO: Add some validation to make sure that
       // all data is available before sending the request
+
+      // TODO: Add some error handling, in case the API returns errors
       axios
         .get(`${state.apiURL}/find/`, {
           params: {

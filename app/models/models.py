@@ -6,11 +6,12 @@ from typing import List, Union
 class Coordinate(BaseModel):
     """
     Coordinate datatype with latitude and longitude
-    
+
     Args:
         latitude: Latitude of a coordinate
         longitude: Longitude of a coordinate
     """
+
     latitude: float
     longitude: float
 
@@ -18,12 +19,12 @@ class Coordinate(BaseModel):
 class Fuel(BaseModel):
     fueltype: str
 
-    @validator('fueltype')
+    @validator("fueltype")
     def check_valid_fueltype(cls, v):
         # Make sure that the fueltype is supported
-        supported_fueltypes = ['diesel', 'e5', 'e10']
+        supported_fueltypes = ["diesel", "e5", "e10"]
         if v not in supported_fueltypes:
-            raise ValueError('Wrong fueltype')
+            raise ValueError("Wrong fueltype")
         return v
 
 
@@ -53,7 +54,9 @@ class GMapsResponse(BaseModel):
     rows: List[Row]
     status: str
 
+
 Price = Union[float, None]
+
 
 class PetrolStation(BaseModel):
     id: uuid.UUID
@@ -83,6 +86,10 @@ class PetrolStations(BaseModel):
     status: str
     stations: List[PetrolStation]
 
+
 class RadiusTooBig(Exception):
     pass
 
+
+class NoStationsFound(Exception):
+    pass
