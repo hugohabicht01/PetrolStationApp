@@ -8,7 +8,6 @@ from os import getenv
 from dotenv import load_dotenv
 
 
-
 # TODO: Consider switching to async
 app = FastAPI()
 print("fastapi started")
@@ -36,6 +35,7 @@ TANKERKOENIG_API_KEY = getenv("TANKERKOENIG_API_KEY")
 
 print("loaded api keys")
 
+
 @app.get("/version")
 async def version():
     print("Hit route /version")
@@ -53,20 +53,32 @@ def find_petrol_stations(
     avg_motorway: float = 7.2,
 ):
     current_pos: models.Coordinate = models.Coordinate(latitude=lat, longitude=lng)
-    petrol_stations: models.PetrolStations = prices.get_nearest_stations(
-        current_pos, rad, fueltype, apikey=TANKERKOENIG_API_KEY
-    )
+    try:
+        petrol_stations: models.PetrolStations = prices.get_nearest_stations(
+            current_pos, rad, fueltype, apikey=TANKERKOENIG_API_KEY
+        )
+    except models.NoStationsFound:
+        raise HTTPException(
+            status_code=400,
+            detail="No stations in this area, try increasing the radius",
+        )
 
     try:
         petrol_stations_nearby = navigation.find_distances_and_fuelconsumption(
-            current_pos, petrol_stations, tankfill, avg_city, avg_motorway, GOOGLE_API_KEY
+            current_pos,
+            petrol_stations,
+            tankfill,
+            avg_city,
+            avg_motorway,
+            GOOGLE_API_KEY,
         )
-    except models.RadiusTooBig:
-        raise HTTPException(status_code=400, detail="Radius too big, try lowering the radius")
+    except models.GoogleMapsError:
+        raise HTTPException(
+            status_code=400,
+            detail="Error finding navigation details, please search with changed parameters",
+        )
     return {"ok": True, "petrolStations": petrol_stations_nearby}
 
 
 # if __name__ == "__main__":
 #     uvicorn.run(app, host="0.0.0.0", port=8000)
-
-

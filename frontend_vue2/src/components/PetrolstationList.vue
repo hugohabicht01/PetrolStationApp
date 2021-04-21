@@ -1,7 +1,7 @@
 <template>
   <div>
     <h1>List of petrolstations in your surrounding</h1>
-    <div v-show="!apiCallSuccess">Error contacting server</div>
+    <div v-if="!apiCallSuccess">Error contacting server</div>
     <table>
       <tr>
         <th>Name</th>
@@ -10,6 +10,7 @@
         <th>Estimated travel time</th>
         <th>Distance</th>
       </tr>
+      <!-- TODO: Make table sortable by each column -->
       <tr v-for="station in getStations" :key="station.id">
         <td>{{ station.name }}</td>
         <td>{{ station.price }}</td>
