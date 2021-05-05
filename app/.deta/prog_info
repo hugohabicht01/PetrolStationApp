@@ -1,0 +1,1 @@
+{"id":"f8cb386d-33a4-4dda-8791-a2ae5829200c","space":4123,"runtime":"python3.7","name":"app","path":"nfpk0m","project":"a0n4k4b0","account":"144798365827","region":"eu-west-2","deps":["requests","googlemaps","python-dotenv","fastapi","pydantic","responses"],"envs":null,"public":true,"log_level":"debug","cron":"","reload_deps":false}

@@ -23,6 +23,7 @@ test = "python3 -m unittest discover -v app/tests"
 [dev-packages]
 black = "*"
 rope = "*"
+uvicorn = "*"
 
 [pipenv]
 allow_prereleases = true

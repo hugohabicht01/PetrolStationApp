@@ -7,12 +7,13 @@
     ],
     "vim.useSystemClipboard": true,
     "editor.fontFamily": "FiraCode Nerd Font",
-    "workbench.colorTheme": "Spotify",
+    "workbench.colorTheme": "Tomorrow Night Blue",
     "editor.lineNumbers": "relative",
     "window.titleBarStyle": "custom",
     "terminal.integrated.fontFamily": "FiraCode Nerd Font",
-    "python.pythonPath": "/home/linuxer/.local/share/virtualenvs/PetrolStationApp-HUF5CsW9",
+    "python.pythonPath": "/home/ceddy/.local/share/virtualenvs/PetrolStationApp-7Th2tOz1",
     "python.linting.pylintEnabled": false,
     "python.linting.flake8Enabled": true,
-    "python.linting.enabled": true
+    "python.linting.enabled": true,
+    "python.formatting.provider": "black"
 }
