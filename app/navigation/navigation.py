@@ -13,13 +13,8 @@ def find_distances_and_fuelconsumption(
         api_key: str,
 ):
     #  TODO: This whole
-    #  function is extremly ugly and bad code, PLS CLEAN THIS UP FFS Just add some classes and do all the stations
-    #  thingies object oriented, will be way cleaner than this mess Whoever this reads, sorry for the offensive
-    #  language, but programming can sometimes make us all a bit salty if not everything is working how we want it to
-    #  work
-
-    # TODO: Although I hate myself for doing this, to just get something working, I'm gonna set this constant
-    # THIS NEEDS A WAY OF CHANGING IT. YOU DONT ALWAYS WANT TO FILL UP 10 LITERS!!!
+    #  function is extremly ugly and bad code. Just add some classes and do all the stations
+    # object oriented, will be way cleaner than this mess 
 
     stations_coords = []
     for station in petrol_stations.stations:

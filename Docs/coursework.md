@@ -1,27 +1,40 @@
-## Analysis
+# Computer Science Coursework by Cedric Borgers
+
 ### Table of Contents
-1. [Outline of the Project and Background](#outline-of-the-project-and-background)
-2. [Stakeholders](#stakeholders)
-3. [Why is this Problem Best Solved by Computational Methods](#why-is-this-problem-best-solved-by-computational-methods)
-4. [Justification of Computational Methods Utilised](#justification-of-computational-methods-utilised)
-    1. [Thinking Abstractly with Visualisation](#thinking-abstractly-with-visualisation)
-    2. [Thinking Ahead](#thinking-ahead)
-    3. [Thinking Procedurally and Logically](#thinking-procedurally-and-logically)
-5. [Market Research and Similar Solutions](#market-research-and-similar-solutions)
-    1. [Tankerkönig](#tankerkönig)
-    2. [T-Online](#t-online)
-    3. [TankenTanken](#tankentanken)
-    4. [Ich Tanke](#ich-tanke)
-    5. [clever-tanken](#clever-tanken)
-    6. [Other Apps and Websites](#other-apps-and-websites)
-    7. [Analysis of Existing Solutions](#analysis-of-existing-solutions)
-6. [Essential Features](#essential-features)
-7. [Possibly Useful Features](#possibly-useful-features)
-8. [Limitations](#limitations)
-9. [Success Criteria](#success-criteria)
-10. [Software and Hardware Requirements](#software-and-hardware-requirements)
-    1. [Software](#software)
-    2. [Hardware](#hardware)
+1. [Analysis](#analysis)
+    1. [Outline of the Project and Background](#outline-of-the-project-and-background)
+    2. [Stakeholders](#stakeholders)
+    3. [Why is this Problem Best Solved by Computational Methods](#why-is-this-problem-best-solved-by-computational-methods)
+    4. [Justification of Computational Methods Utilised](#justification-of-computational-methods-utilised)
+        1. [Thinking Abstractly with Visualisation](#thinking-abstractly-with-visualisation)
+        2. [Thinking Ahead](#thinking-ahead)
+        3. [Thinking Procedurally and Logically](#thinking-procedurally-and-logically)
+    5. [Market Research and Similar Solutions](#market-research-and-similar-solutions)
+        1. [Tankerkönig](#tankerkönig)
+        2. [T-Online](#t-online)
+        3. [TankenTanken](#tankentanken)
+        4. [Ich Tanke](#ich-tanke)
+        5. [clever-tanken](#clever-tanken)
+        6. [Other Apps and Websites](#other-apps-and-websites)
+        7. [Analysis of Existing Solutions](#analysis-of-existing-solutions)
+    6. [Essential Features](#essential-features)
+    7. [Possibly Useful Features](#possibly-useful-features)
+    8. [Limitations](#limitations)
+    9. [Success Criteria](#success-criteria)
+    10. [Software and Hardware Requirements](#software-and-hardware-requirements)
+        1. [Software](#software)
+        2. [Hardware](#hardware)
+2. [Design](#design)
+    1. [System overview](#system-overview)
+3. [Development](#development)
+    1. [23.04.2021](#23042021)
+    2. [Code](#code)
+        1. [Frontend](#frontend)
+        2. [Backend](#backend)
+        3. [API documentation](#api-documentation)
+
+
+## Analysis
 
 ### Outline of the Project and Background
 
@@ -43,9 +56,6 @@ My father uses several smartphones and a laptop with internet access. So with di
 I will stay in touch with him and show him the app for feedback on a regular basis as I develop it and improve on issues that he considers to be impractical or not user-friendly enough.
 
 <!-- ### Why is this problem perfect for a computational solution rather than something else? -->
-
-<br/>
-<br/>
 
 ### Why is this Problem Best Solved by Computational Methods
 The project requires that an exceptionally large amount of data needs to be accumulated, processed and finally evaluated. It has to be taken  into account that data from different sources who are being updated frequently have to be accumulated in real time.  Computers are best suited for the processing of these amounts of data within this limited time. 
@@ -84,23 +94,12 @@ In case two or more users are sending requests to my API at the same time, it ha
 Before starting with my own project I researched all available apps for a similar purpose on the German market. These are native mobile phone applications, and some provide an app as well as a website.
 <!-- Linebreaks here to have this all together on the next page in the pdf -->
 
-<br/>
  
 #### Tankerkönig:  
 
 Screenshot of their startsite: \
 \
 ![Tankerkönig Startsite](images/tankerkönig_start.jpg)
-
-<br/>
-<br/>
-<br/>
-<br/>
-<br/>
-<br/>
-<br/>
-<br/>
-<br/>
 
 Screenshot of their results page: \
 \
@@ -126,19 +125,6 @@ Screenshot of their startpage: \
 
 <!-- Linebreaks here to have this all together on the next page in the pdf -->
 
-<br/>
-<br/>
-<br/>
-<br/>
-<br/>
-<br/>
-<br/>
-<br/>
-<br/>
-<br/>
-<br/>
-<br/>
- 
 Screenshot of their results page: \
 \
 ![TankenTanken results](images/tankentanken_search.jpg) \
@@ -162,8 +148,6 @@ They also offer an app with similar features:
 Screenshot of their startpage: \
 ![Ich Tanke Startpage](images/ichtanke_start.jpg)
 
-<br/>
-<br/>
 <br/>
 
 Screenshot of their results page: \
@@ -262,6 +246,102 @@ Server:
 
 Client:
 - Hardware requirements of your browser
+
+
+## Design
+
+### System overview
+This project is split up in two main parts called the frontend and backend.
+There are a couple of reasons for doing this:
+- Separation between the business logic and it's presented to the user. All the work gets done in the backend while the frontend only displays the data delivered by the backend. This nicely separates the logic from the UI which just makes the code more clean and easier to understand. UI creation code isn't mixed with the logic which allows for easier changes on both parts
+- This project interacts with a few APIs that require authentication. If I were to fetch these APIs from the same programs as the one that displays it, it would be quite simple to just take a snapshot of the memory and steal the API credentials and use them for criminal gain. This would obviously result in getting a huge bill by Google Maps because some criminal sent requests in my name using my API key. Moving the whole fetching and calculation process to the backend (that's running on my own server) makes it impossible for criminals to just steal the API key from the application unless my server has a vulnerability.
+- Having a backend that's just an API delivering data makes it easy to setup an alternative frontend. This is especially helpful if your original fronted doesn't turn out to be how you want it. You can start developing another frontend while keeping the old frontend available for users that prefer it. Reddit has done this and still keeps its old (and still quite popular) frontend at https://old.reddit.com while the new frontend is available at https://reddit.com
+- In case you have/gain a lot of users that want to use you system at the same time, you can scale everything way better, have different servers that deliver the static files required by the frontend (the HTML, CSS and JS files) and some other backend servers that deliver the content. This scales way better than if you just have a backend that generates the frontend code
+
+## Development
+I develop this project using git as my version control system and github as my CI Pipeline provider, that automatically runs all the tests every time I push new code. All of my code will be made publicly available on [github](https://github.com/hugohabicht01/PetrolStationApp.git) as soon as the project is in a usable state and I removed all private information that might be in some of the commits.
+This project uses a backend written in Python with the FASTAPI framework that handles requests from the frontend or any HTTP client, gets prices from the [tankerkönig api](https://creativecommons.tankerkoenig.de/), then requests navigation details from the google maps api and returns the gathered information to the fronted in json format. The backend package management system is pipenv and it can also be used to start up the backend with `pipenv run dev`. Unit tests can be run via `pipenv run test`.
+The frontend is made with Vue.js version 2, the package management is yarn which also manages the compiling, etc. After one runs `yarn install` to install all dependencies, one can start up the frontend with `yarn serve` or `yarn build` and then providing the files on a webserver.  
+Structure of the project:  
+![Structure of the project](Screenshots/overview.png)
+
+
+### 23.04.2021
+Today I need to hand in the project so I took a screenshot to show how far this project got. Many features are still missing and everything is completely unstyled but the core functionality works.
+![Picture of the current state of the frontend](Screenshots/WorkingExample.png)
+
+### Code
+#### Frontend
+Structure:  
+![Structure of the frontend](Screenshots/structure_frontend.png)
+
+babel.config.js:  
+![babel.config.js](CodePictures/babel.config.js.png)
+
+package.json:  
+![package.json](CodePictures/package.json.png)
+
+index.html:  
+![index.html](CodePictures/index.html.png)
+
+App.vue:  
+![App.vue](CodePictures/App.vue.png)
+
+PetrolStationList.vue:  
+![PetrolStationList.vue](CodePictures/PetrolstationList.vue.png)
+
+Position.vue:  
+![Position.vue](CodePictures/Position.vue.png)
+
+SearchForm.vue
+![SearchForm.vue](CodePictures/SearchForm.vue.png)
+
+main.js:  
+![main.js](CodePictures/main.js.png)
+
+index.js:  
+![index.js](CodePictures/index.js.png)
+
+vue.config.js:  
+![vue.config.js](CodePictures/vue.config.js.png)
+
+yarn.lock:
+This file is just a that is autogenerated from package.json, no point showing it, as it just hashes of installed packages.
+
+#### Backend
+Structure:  
+![Structure of the backend](Screenshots/structure_backend.png)
+
+main.py:  
+![main.py](CodePictures/main.py.png)
+
+models.py:  
+![models.py](CodePictures/models.py.png)
+
+navigation.py:  
+![navigation.py](CodePictures/navigation.py.png)
+
+prices.py:
+![prices.py](CodePictures/prices.py.png)
+
+test_navigation.py:  
+![test_navigation.py](CodePictures/test_navigation.py.png)
+
+test_prices.py:  
+![test_prices.py](CodePictures/test_prices.py.png)
+
+#### API documentation
+The RESTful API has two different routes:
+- `/version`: Just prints the current version
+- `/find/`: Takes different parameters, returns any found petrolstations
+
+Parameters of `/find/`:
+![parameters](Screenshots/findParameters.png)
+
+A sample request and response could look like this:
+![sample_req__res](CodePictures/sample_req_res.png)
+
+
 
 <style type="text/css">
 .markdown-body {

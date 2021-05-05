@@ -43,6 +43,7 @@
         type="button"
         @click="showAdvanced = !showAdvanced"
         :value="advancedOptionsButtonText"
+        id="btnAdvancedOptions"
       />
       <div class="advancedOptions" v-show="showAdvanced">
         <div class="forminputs">
@@ -136,7 +137,7 @@ $form-width: 400px;
 .petrolstations {
   display: flex;
   flex-direction: column;
-  width: 50vw;
+  width: min-width;
   box-shadow: 0px 8px 40px rgba(128, 128, 128, 0.15);
 }
 .form {
@@ -153,5 +154,9 @@ $form-width: 400px;
   flex-direction: row;
   justify-content: space-between;
   align-items: center;
+}
+#btnAdvancedOptions {
+  justify-self: center;
+  width: 50%;
 }
 </style>

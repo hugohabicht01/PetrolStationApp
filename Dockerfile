@@ -1,17 +1,11 @@
 FROM python:3.9
 
-RUN pip install pipenv
+RUN python -m pip install --upgrade pip
+RUN python -m pip install pipenv
+RUN pipenv sync --dev
 
-EXPOSE 8000
+EXPOSE 80
 
 COPY ./app /app
-COPY ./Pipfile /Pipfile
-COPY ./Pipfile.lock /Pipfile.lock
-COPY ./.env /.env
 
-RUN pipenv install
-
-
-CMD ["pipenv", "run", "dev"]
-
-# CMD ["uvicorn", "app.main:app", "--host", "0.0.0.0", "--port", "80"]
+CMD ["uvicorn", "app.main:app", "--host", "0.0.0.0", "--port", "80"]
