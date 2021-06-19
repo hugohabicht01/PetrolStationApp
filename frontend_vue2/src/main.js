@@ -6,7 +6,7 @@ import store from './store';
 Vue.config.productionTip = false;
 Vue.use(VueGoogleMaps, {
   load: {
-    key: 'YOUR_API_TOKEN',
+    key: 'AIzaSyD6z4WhJMY85Xgc9ZIRTMbCgr1zfSIMhUg',
     libraries: 'places', // This is required if you use the Autocomplete plugin
     // OR: libraries: 'places,drawing'
     // OR: libraries: 'places,drawing,visualization'

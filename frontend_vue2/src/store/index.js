@@ -55,6 +55,7 @@ const store = new Vuex.Store({
       const lng = state.currentCoordinates.longitude;
       return `${lat},${lng}`;
     },
+    coords: (state) => ({ lat: state.currentCoordinates.latitude, lng: state.currentCoordinates.longitude }),
     apiCallSuccess: (state) => state.apiData.ok === true,
     getStations: (state) => state.apiData.petrolStations,
   },

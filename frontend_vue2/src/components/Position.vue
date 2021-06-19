@@ -8,14 +8,24 @@
     <div>or</div>
     <p>Enter your current coordinates manually</p>
     <p>
-      Latitude: <input type="text" v-model="currLat" />, Longitude:
-      <input type="text" v-model="currLng" />
+      Latitude: <input type="text" v-model.number="currLat" />, Longitude:
+      <input type="text" v-model.number="currLng" />
     </p>
     <button @click="setPosManually(currLat, currLng)">Set position</button>
     <p v-if="foundCoordinates">
       Latitude: {{ currentLatitude }}, Longitude: {{ currentLongitude }}
     </p>
-    <iframe
+    <GmapMap
+      :center="{lat: 51.163361, lng:10.447683}"
+      :zoom="5"
+      style="width: 600px;height: 450px"
+    >
+    <!-- Middle point of Germany to center the map-->
+    <GmapMarker
+      :position="coords"
+      />
+    </GmapMap>
+    <!-- <iframe
       width="600"
       height="450"
       style="border: 0"
@@ -27,7 +37,7 @@
       "
       v-if="foundCoordinates"
     >
-    </iframe>
+    </iframe> -->
   </div>
 </template>
 
@@ -47,6 +57,7 @@ export default {
     'currentLatitude',
     'currentLongitude',
     'formattedCoords',
+    'coords',
     'errorWithGPS',
     'foundCoordinates',
   ]),
