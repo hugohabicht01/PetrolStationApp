@@ -1,7 +1,7 @@
 <template>
   <div>
     <h1>List of petrolstations in your surrounding</h1>
-    <div v-if="!apiCallSuccess">Error contacting server</div>
+    <div v-if="apiCallError">Error contacting server</div>
     <table>
       <tr>
         <th>Name</th>
@@ -11,6 +11,7 @@
         <th>Distance</th>
       </tr>
       <!-- TODO: Make table sortable by each column -->
+      <!-- TODO: Add a popup with details about each station -->
       <tr v-for="station in getStations" :key="station.id">
         <td>{{ station.name }}</td>
         <td>{{ station.price }}</td>
@@ -26,7 +27,7 @@
 import { mapGetters } from 'vuex';
 // import store from '../store/index';
 export default {
-  computed: mapGetters(['apiCallSuccess', 'getStations']),
+  computed: mapGetters(['apiCallError', 'getStations']),
   filters: {
     formatToTwoDecimals: (value) => {
       const num = parseFloat(value);
@@ -36,4 +37,9 @@ export default {
 };
 </script>
 
-<style></style>
+<style>
+table, th, td {
+  border: 1px solid black;
+  border-collapse: collapse;
+}
+</style>
