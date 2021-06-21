@@ -15,6 +15,7 @@ const store = new Vuex.Store({
       ok: undefined,
       petrolStations: [],
     },
+    apiCallError: false,
     formData: {
       petroltype: '',
       radius: 2.0,
@@ -42,6 +43,9 @@ const store = new Vuex.Store({
       state.apiData.ok = data.ok;
       state.apiData.petrolStations = data.petrolStations;
     },
+    setAPICallError(state, error) {
+      state.apiCallError = error
+    },
   },
   getters: {
     currentLatitude: (state) => state.currentCoordinates.latitude,
@@ -56,7 +60,7 @@ const store = new Vuex.Store({
       return `${lat},${lng}`;
     },
     coords: (state) => ({ lat: state.currentCoordinates.latitude, lng: state.currentCoordinates.longitude }),
-    apiCallSuccess: (state) => state.apiData.ok === true,
+    apiCallError: (state) => state.apiCallError,
     getStations: (state) => state.apiData.petrolStations,
   },
   actions: {
@@ -79,8 +83,12 @@ const store = new Vuex.Store({
         })
         .then((response) => {
           commit('setAPIData', response.data);
+          commit('setAPICallError', false);
         })
-        .catch((error) => console.log(error))
+        .catch((error) => {
+          console.log(error);
+          commit('setAPICallError', error);
+        })
         .then(() => console.log('Finished http request'));
     },
   },

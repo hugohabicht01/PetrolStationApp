@@ -6,23 +6,27 @@
       position manually
     </div>
     <div>or</div>
-    <p>Enter your current coordinates manually</p>
-    <p>
-      Latitude: <input type="text" v-model.number="currLat" />, Longitude:
-      <input type="text" v-model.number="currLng" />
-    </p>
-    <button @click="setPosManually(currLat, currLng)">Set position</button>
+    <div>
+      <Gmap-Autocomplete 
+      placeholder="Search for address..." 
+      @place_changed="setPlace"
+      :options='{componentRestrictions: { country: "de" }}'>
+      </Gmap-Autocomplete>
+      <button @click="usePlace">Confirm</button>
+    </div>
     <p v-if="foundCoordinates">
       Latitude: {{ currentLatitude }}, Longitude: {{ currentLongitude }}
     </p>
     <GmapMap
       :center="{lat: 51.163361, lng:10.447683}"
-      :zoom="5"
+      :zoom="mapZoom"
+      ref="googlemap"
       style="width: 600px;height: 450px"
     >
     <!-- Middle point of Germany to center the map-->
     <GmapMarker
       :position="coords"
+      v-if="foundCoordinates"
       />
     </GmapMap>
     <!-- <iframe
@@ -45,13 +49,12 @@
 import { mapGetters } from 'vuex';
 import store from '../store/index';
 
-/* TODO: Add google maps place search with autocomplete
- to find the position using street names instead of coordinates directly
- */
 export default {
   data: () => ({
     currLat: 0,
     currLng: 0,
+    place: null,
+    mapZoom: 5,
   }),
   computed: mapGetters([
     'currentLatitude',
@@ -62,7 +65,11 @@ export default {
     'foundCoordinates',
   ]),
   methods: {
-    setPosGPS: () => {
+    zoomMapTo(lat, lng, zoom) {
+      this.$refs.googlemap.panTo({lat, lng});
+      this.mapZoom = zoom;
+    },
+    setPosGPS () {
       navigator.geolocation.getCurrentPosition(
         (pos) => {
           const coords = {
@@ -71,6 +78,8 @@ export default {
             error: false,
           };
           store.commit('setCurrentCoordinates', coords);
+          this.zoomMapTo(coords.latitude, coords.longitude, 12);
+          
         },
         (err) => {
           console.log(`Error getting current coordinates. ERROR: ${err}`);
@@ -82,6 +91,17 @@ export default {
     setPosManually: (lat, lng) => {
       store.commit('setCurrentCoordinates', { latitude: lat, longitude: lng, error: false });
     },
+    setPlace(place) {
+      this.place = place;
+    },
+    usePlace(place) {
+      if (this.place) {
+        const lat = this.place.geometry.location.lat();
+        const lng = this.place.geometry.location.lng();
+        this.setPosManually(lat, lng);
+        this.zoomMapTo(lat, lng, 12);
+      }
+    }
   },
 };
 </script>

@@ -32,17 +32,22 @@ load_dotenv(dotenv_path)
 
 GOOGLE_API_KEY = getenv("GOOGLE_API_KEY")
 TANKERKOENIG_API_KEY = getenv("TANKERKOENIG_API_KEY")
-
+# TODO: Add validation that it actually loaded API keys
 print("loaded api keys")
 
 
 @app.get("/version")
 async def version():
     print("Hit route /version")
-    return {"message": "Testversion, nothing works yet"}
+    return {"version": "0.1", "status":"working but not everything is implemented yet"}
 
+# TODO: Implement route that returns details about a petrol station by UUID
+# See https://creativecommons.tankerkoenig.de/ for more information
+@app.get("/details")
+def details_petrol_station(id: str):
+    raise HTTPException(status_code=501, detail="Will be implemented soon (TM)")
 
-@app.get("/find/")
+@app.get("/find")
 def find_petrol_stations(
     lat: str,
     lng: str,
