@@ -4,8 +4,8 @@ from app.petrolprices import prices
 from app.models import models
 from app.navigation import navigation
 from os.path import join, dirname
-from os import getenv
-from dotenv import load_dotenv
+import sys
+from dotenv import dotenv_values
 
 
 # TODO: Consider switching to async
@@ -13,8 +13,6 @@ app = FastAPI()
 print("fastapi started")
 
 origins = [
-    "http://localhost.tiangolo.com",
-    "https://localhost.tiangolo.com",
     "http://localhost",
     "http://localhost:8080",
 ]
@@ -27,13 +25,17 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-dotenv_path = join(dirname(__file__), ".env")
-load_dotenv(dotenv_path)
 
-GOOGLE_API_KEY = getenv("GOOGLE_API_KEY")
-TANKERKOENIG_API_KEY = getenv("TANKERKOENIG_API_KEY")
+api_keys = dotenv_values(join(dirname(__file__), ".env"))
+
+try:
+    GOOGLE_API_KEY = api_keys['GOOGLE_API_KEY']
+    TANKERKOENIG_API_KEY = api_keys['TANKERKOENIG_API_KEY']
+    print("loaded api keys")
+except KeyError:
+    print("Not all API keys were supplied, exiting")
+    sys.exit(1)
 # TODO: Add validation that it actually loaded API keys
-print("loaded api keys")
 
 
 @app.get("/version")
@@ -45,7 +47,8 @@ async def version():
 # See https://creativecommons.tankerkoenig.de/ for more information
 @app.get("/details")
 def details_petrol_station(id: str):
-    raise HTTPException(status_code=501, detail="Will be implemented soon (TM)")
+    return {"ok": True, "details": prices.get_station_details(id, TANKERKOENIG_API_KEY)}
+
 
 @app.get("/find")
 def find_petrol_stations(
