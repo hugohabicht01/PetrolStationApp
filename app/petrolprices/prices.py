@@ -3,13 +3,13 @@ from app.models import models
 
 
 def get_nearest_stations(
-    positon: models.Coordinate, rad: float, fueltype: str, apikey: str
+    position: models.Coordinate, rad: float, fueltype: str, api_key: str
 ) -> models.PetrolStations:
     """
     Fetches all petrol stations in a certain radius from a position and returns their prices
 
     Args:
-        positon: current position
+        position: current position
         rad: radius in which petrol stations should be searched for
         fueltype: fueltype of your car
         apikey: Tankerkönig API key
@@ -22,8 +22,8 @@ def get_nearest_stations(
     """
     PETROL_PRICES_API_URL: str = "https://creativecommons.tankerkoenig.de/json/list.php"
 
-    lat: float = positon.latitude
-    lng: float = positon.longitude
+    lat: float = position.latitude
+    lng: float = position.longitude
 
     r: requests.models.Response = requests.get(
         PETROL_PRICES_API_URL,
@@ -32,7 +32,7 @@ def get_nearest_stations(
             "lng": lng,
             "rad": rad,
             "type": fueltype,
-            "apikey": apikey,
+            "apikey": api_key,
             "sort": "price",
         },
     )
@@ -50,3 +50,24 @@ def get_nearest_stations(
         raise RuntimeError("Pricing API returned data error")
 
     return prices_model
+
+def get_station_details(id: str, api_key: str) -> models.Details:
+    PETROL_DETAILS_API_URL: str = 'https://creativecommons.tankerkoenig.de/json/detail.php'
+
+    r: requests.models.Response = requests.get(
+        PETROL_DETAILS_API_URL,
+        params={
+            "id": id,
+            "apikey": api_key,
+        },
+    )
+
+    if r.status_code != 200:
+        raise RuntimeError(f"Pricing API returned http error {r.status_code}")
+    details: models.PetrolStations = models.PetrolStations(**r.json())
+
+    # TODO: Instead of throwing exceptions, build a proper response
+    if not details.ok and not details.status != "ok":
+        raise RuntimeError("Pricing API returned data error")
+    
+    return details.station
