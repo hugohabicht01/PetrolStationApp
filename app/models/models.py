@@ -78,13 +78,37 @@ class PetrolStation(BaseModel):
     distance: Distance = None
     duration: Duration = None
 
+class OpeningTimes(BaseModel):
+    text: str
+    start: str
+    end: str
+
+class Details(BaseModel):
+        id: str
+        name: str
+        brand: str
+        street: str
+        houseNumber: str
+        postCode: str
+        place: str
+        openingTimes: List[OpeningTimes]
+        overrides: List[str]
+        wholeDay: bool
+        isOpen: bool
+        e5: float
+        e10: float
+        diesel: float
+        lat: float
+        lng: float
+        state: Union[str, None]
 
 class PetrolStations(BaseModel):
     ok: bool
     license: str
     data: str
     status: str
-    stations: List[PetrolStation]
+    stations: List[PetrolStation] = None
+    station: Details = None
 
 
 class RadiusTooBig(Exception):

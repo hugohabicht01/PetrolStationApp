@@ -60,7 +60,7 @@ def find_petrol_stations(
     current_pos: models.Coordinate = models.Coordinate(latitude=lat, longitude=lng)
     try:
         petrol_stations: models.PetrolStations = prices.get_nearest_stations(
-            current_pos, rad, fueltype, apikey=TANKERKOENIG_API_KEY
+            current_pos, rad, fueltype, api_key=TANKERKOENIG_API_KEY
         )
     except models.NoStationsFound:
         raise HTTPException(
@@ -68,6 +68,7 @@ def find_petrol_stations(
             detail="No stations in this area, try increasing the radius",
         )
 
+    # TODO: Refractor this and implement some kind of pagination to allow for higher search radii
     try:
         petrol_stations_nearby = navigation.find_distances_and_fuelconsumption(
             current_pos,

@@ -1,5 +1,6 @@
 # Python gitignore
 .env
+.venv
 __pycache__/
 
 # Jetbrains IDEs settings
