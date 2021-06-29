@@ -3,19 +3,14 @@ from fastapi.middleware.cors import CORSMiddleware
 from app.petrolprices import prices
 from app.models import models
 from app.navigation import navigation
-from os.path import join, dirname
-import sys
-from dotenv import dotenv_values
+from os import getenv
 
 
 # TODO: Consider switching to async
 app = FastAPI()
 print("fastapi started")
 
-origins = [
-    "http://localhost",
-    "http://localhost:8080",
-]
+origins = ["*"]
 
 app.add_middleware(
     CORSMiddleware,
@@ -26,28 +21,25 @@ app.add_middleware(
 )
 
 
-api_keys = dotenv_values(join(dirname(__file__), ".env"))
-
-try:
-    GOOGLE_API_KEY = api_keys['GOOGLE_API_KEY']
-    TANKERKOENIG_API_KEY = api_keys['TANKERKOENIG_API_KEY']
-    print("loaded api keys")
-except KeyError:
-    print("Not all API keys were supplied, exiting")
-    sys.exit(1)
-# TODO: Add validation that it actually loaded API keys
-
+# dotenv not needed as pipenv already loads the variables from .env
+GOOGLE_API_KEY = getenv("GOOGLE_API_KEY")
+TANKERKOENIG_API_KEY = getenv("TANKERKOENIG_API_KEY")
 
 @app.get("/version")
 async def version():
     print("Hit route /version")
     return {"version": "0.1", "status":"working but not everything is implemented yet"}
 
-# TODO: Implement route that returns details about a petrol station by UUID
-# See https://creativecommons.tankerkoenig.de/ for more information
 @app.get("/details")
 def details_petrol_station(id: str):
-    return {"ok": True, "details": prices.get_station_details(id, TANKERKOENIG_API_KEY)}
+    # TODO: Add proper errorhandling, this is very hacky...
+    # Some more verbosity would also be nice so that the response makes clear if the error occured 
+    # on the server side or if its just a bad request
+
+    try:
+        return {"ok": True, "details": prices.get_station_details(id, TANKERKOENIG_API_KEY)}
+    except models.PricingAPIError:
+        return {"ok": False, "details": "Bad request"}
 
 
 @app.get("/find")
@@ -81,7 +73,11 @@ def find_petrol_stations(
             avg_motorway,
             GOOGLE_API_KEY,
         )
-    except models.GoogleMapsError:
+    # TODO: Figure out when this exception gets triggered
+    # Just noticed that it didn't exist in the models, that's why I'm kind of confused...
+    # Added it to prevent errors but knowing the origin would be handy
+    except models.GoogleMapsError as e:
+        print(e)
         raise HTTPException(
             status_code=400,
             detail="Error finding navigation details, please search with changed parameters",
