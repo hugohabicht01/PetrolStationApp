@@ -114,6 +114,11 @@ class PetrolStations(BaseModel):
 class RadiusTooBig(Exception):
     pass
 
-
 class NoStationsFound(Exception):
+    pass
+
+class PricingAPIError(Exception):
+    pass
+
+class GoogleMapsError(Exception):
     pass

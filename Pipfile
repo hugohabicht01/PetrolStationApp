@@ -6,7 +6,6 @@ verify_ssl = true
 [packages]
 requests = "*"
 googlemaps = "*"
-python-dotenv = "*"
 fastapi = "*"
 uvicorn = "*"
 pydantic = "*"

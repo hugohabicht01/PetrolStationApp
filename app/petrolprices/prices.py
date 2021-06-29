@@ -18,7 +18,8 @@ def get_nearest_stations(
         All petrol stations within the radius
 
     Raises:
-        RuntimeError: Pricing API returned http error STATUSCODE
+        models.PricingAPIError: Pricing API returned invalid data
+        models.NoStationsFound: No stations were found in the given radius
     """
     PETROL_PRICES_API_URL: str = "https://creativecommons.tankerkoenig.de/json/list.php"
 
@@ -37,21 +38,33 @@ def get_nearest_stations(
         },
     )
     if r.status_code != 200:
-        raise RuntimeError(f"Pricing API returned http error {r.status_code}")
+        raise models.PricingAPIError
 
     prices: dict = r.json()
+
+    if prices['ok'] != True or prices['status'] != "ok":
+        raise models.PricingAPIError
     prices_model: models.PetrolStations = models.PetrolStations(**prices)
-    print(prices_model)
 
     if len(prices_model.stations) == 0:
         raise models.NoStationsFound("No stations in that area")
 
-    if not prices_model.ok and prices_model.status != "ok":
-        raise RuntimeError("Pricing API returned data error")
-
     return prices_model
 
 def get_station_details(id: str, api_key: str) -> models.Details:
+    """Fetches details about a petrol station by id
+    
+    Args:
+        id: uuid of a petrol station
+    
+    Returns:
+        Current petrol prices, address, opening times
+    
+    Raises:
+        models.PricingAPIError
+    """
+
+    # TODO: Add unit- and integrationtests
     PETROL_DETAILS_API_URL: str = 'https://creativecommons.tankerkoenig.de/json/detail.php'
 
     r: requests.models.Response = requests.get(
@@ -63,11 +76,13 @@ def get_station_details(id: str, api_key: str) -> models.Details:
     )
 
     if r.status_code != 200:
-        raise RuntimeError(f"Pricing API returned http error {r.status_code}")
-    details: models.PetrolStations = models.PetrolStations(**r.json())
+        raise models.PricingAPIError
 
-    # TODO: Instead of throwing exceptions, build a proper response
-    if not details.ok and not details.status != "ok":
-        raise RuntimeError("Pricing API returned data error")
+    res_json: dict = r.json()
+
+    if res_json['ok'] != True or res_json['status'] != "ok":
+        raise models.PricingAPIError
     
+    details: models.PetrolStations = models.PetrolStations(**res_json)
+
     return details.station

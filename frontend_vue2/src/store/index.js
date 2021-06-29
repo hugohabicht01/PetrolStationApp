@@ -24,7 +24,7 @@ const store = new Vuex.Store({
       avgConsumptionCity: 12.0,
       avgConsumptionMotorway: 7.2,
     },
-    apiURL: 'http://localhost:8000',
+    apiURL: 'https://hugohabicht01-petrolstationapp-gw4w7jq9hj75-8000.githubpreview.dev',
   },
   mutations: {
     setCurrentCoordinates(state, coords) {
@@ -46,6 +46,32 @@ const store = new Vuex.Store({
     setAPICallError(state, error) {
       state.apiCallError = error
     },
+    // Could possibly add a feature to sort in reverse as well
+    // TODO: Refractor all of these methods into one
+    SortStationsByPricePerLiter(state) {
+      state.apiData.petrolStations.sort((a, b) => {
+        return a.price - b.price
+      })
+    },
+    SortStationsByOverallPrice(state) {
+      state.apiData.petrolStations.sort((a, b) => {
+        return a.price_overall - b.price_overall
+      })
+    },
+    SortStationsByTravelTime(state) {
+      state.apiData.petrolStations.sort((a, b) => {
+        return a.duration.value - b.duration.value
+      })
+    },
+    SortStationsByDistance(state) {
+      state.apiData.petrolStations.sort((a, b) => {
+        return a.distance.value - b.distance.value
+      })
+    },
+    SortStationsAlphabetically(state) {
+      state.apiData.petrolStations.sort((a, b) => a.name.localeCompare(b.name)
+      )
+    }
   },
   getters: {
     currentLatitude: (state) => state.currentCoordinates.latitude,
@@ -70,7 +96,7 @@ const store = new Vuex.Store({
 
       // TODO: Add some error handling, in case the API returns errors
       axios
-        .get(`${state.apiURL}/find/`, {
+        .get(`${state.apiURL}/find`, {
           params: {
             lat: state.currentCoordinates.latitude,
             lng: state.currentCoordinates.longitude,

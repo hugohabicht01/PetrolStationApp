@@ -4,11 +4,12 @@
     <div v-if="apiCallError">Error contacting server</div>
     <table>
       <tr>
-        <th>Name</th>
-        <th>Price per liter</th>
-        <th>Price overall</th>
-        <th>Estimated travel time</th>
-        <th>Distance</th>
+        <th @click="SortStationsAlphabetically">Name</th>
+        <th @click="SortStationsByPricePerLiter">Price per liter</th>
+        <!-- TODO: Add some kind of icon that shows which column is currently sorted and in which way -->
+        <th @click="SortStationsByOverallPrice">Price overall</th>
+        <th @click="SortStationsByTravelTime">Estimated travel time</th>
+        <th @click="SortStationsByDistance">Distance</th>
       </tr>
       <!-- TODO: Make table sortable by each column -->
       <!-- TODO: Add a popup with details about each station -->
@@ -24,10 +25,16 @@
 </template>
 
 <script>
-import { mapGetters } from 'vuex';
+import { mapGetters, mapMutations } from 'vuex';
 // import store from '../store/index';
 export default {
   computed: mapGetters(['apiCallError', 'getStations']),
+  methods: {
+    ...mapMutations(['SortStationsByPricePerLiter', 'SortStationsByOverallPrice', 'SortStationsByTravelTime', 'SortStationsByDistance', 'SortStationsAlphabetically' ]),
+  },
+  data: {
+    
+  },
   filters: {
     formatToTwoDecimals: (value) => {
       const num = parseFloat(value);
