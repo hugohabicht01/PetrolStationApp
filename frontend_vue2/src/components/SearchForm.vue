@@ -138,7 +138,6 @@ $form-width: 400px;
   display: flex;
   flex-direction: column;
   width: min-width;
-  box-shadow: 0px 8px 40px rgba(128, 128, 128, 0.15);
 }
 .form {
   display: flex;

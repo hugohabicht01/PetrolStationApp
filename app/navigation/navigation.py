@@ -12,8 +12,8 @@ def find_distances_and_fuelconsumption(
         avg_motorway_fuelconsumption: float,
         api_key: str,
 ):
-    #  TODO: This whole
-    #  function is extremly ugly and bad code. Just add some classes and do all the stations
+    # TODO: This whole function is extremly ugly and bad code.
+    # Just add some classes and do all the stations
     # object oriented, will be way cleaner than this mess 
 
     stations_coords = []
