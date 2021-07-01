@@ -1,6 +1,5 @@
 import Vue from 'vue';
 import Vuex from 'vuex';
-import axios from 'axios';
 
 Vue.use(Vuex);
 
@@ -24,7 +23,9 @@ const store = new Vuex.Store({
       avgConsumptionCity: 12.0,
       avgConsumptionMotorway: 7.2,
     },
-    apiURL: 'https://hugohabicht01-petrolstationapp-gw4w7jq9hj75-8000.githubpreview.dev',
+    detailsID: undefined,
+    details: {},
+    apiURL: 'https://hugohabicht01-petrolstationapp-qg7gpjqrhgpp-8000.githubpreview.dev',
   },
   mutations: {
     setCurrentCoordinates(state, coords) {
@@ -42,12 +43,12 @@ const store = new Vuex.Store({
     setAPIData(state, data) {
       state.apiData.ok = data.ok;
       state.apiData.petrolStations = data.petrolStations;
+      state.apiCallError = false
     },
     setAPICallError(state, error) {
       state.apiCallError = error
     },
     // Could possibly add a feature to sort in reverse as well
-    // TODO: Refractor all of these methods into one
     SortStationsByPricePerLiter(state) {
       state.apiData.petrolStations.sort((a, b) => {
         return a.price - b.price
@@ -71,6 +72,13 @@ const store = new Vuex.Store({
     SortStationsAlphabetically(state) {
       state.apiData.petrolStations.sort((a, b) => a.name.localeCompare(b.name)
       )
+    },
+    setDetailsID(state, data) {
+      state.detailsID = data
+    },
+    setDetails(state, data) {
+      state.details = data.details
+      state.apiCallError = false
     }
   },
   getters: {
@@ -95,28 +103,36 @@ const store = new Vuex.Store({
       // all data is available before sending the request
 
       // TODO: Add some error handling, in case the API returns errors
-      axios
-        .get(`${state.apiURL}/find`, {
-          params: {
-            lat: state.currentCoordinates.latitude,
-            lng: state.currentCoordinates.longitude,
-            fueltype: state.formData.petroltype,
-            rad: state.formData.radius,
-            tankfill: state.formData.tankfill,
-            avg_city: state.formData.avgConsumptionCity,
-            avg_motorway: state.formData.avgConsumptionMotorway,
-          },
-        })
-        .then((response) => {
-          commit('setAPIData', response.data);
-          commit('setAPICallError', false);
-        })
-        .catch((error) => {
-          console.log(error);
-          commit('setAPICallError', error);
-        })
-        .then(() => console.log('Finished http request'));
+      let url = new URL('find', state.apiURL)
+
+      const params = {
+        lat: state.currentCoordinates.latitude,
+        lng: state.currentCoordinates.longitude,
+        fueltype: state.formData.petroltype,
+        rad: state.formData.radius,
+        tankfill: state.formData.tankfill,
+        avg_city: state.formData.avgConsumptionCity,
+        avg_motorway: state.formData.avgConsumptionMotorway,
+      }
+
+      for (const key in params) {
+        url.searchParams.append(key, params[key])
+      }
+
+      fetch(url)
+      .then( resp => resp.json())
+      .then( data => commit('setAPIData', data))
+      .catch( err => commit('setAPICallError', err))
     },
+    detailsPetrolStation({ commit, state}) {
+      let url = new URL('details', state.apiURL);
+      url.searchParams.append("id", state.detailsID);
+
+      fetch(url)
+      .then(resp => resp.json())
+      .then(data => commit('setDetails', data))
+      .catch( err => commit('setAPICallError', err))
+    }
   },
   modules: {},
 });

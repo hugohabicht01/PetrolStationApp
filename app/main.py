@@ -6,7 +6,6 @@ from app.navigation import navigation
 from os import getenv
 
 
-# TODO: Consider switching to async
 app = FastAPI()
 print("fastapi started")
 
@@ -22,6 +21,7 @@ app.add_middleware(
 
 
 # dotenv not needed as pipenv already loads the variables from .env
+# in codespaces it will be available as a normal environment variable from codespaces secrets
 GOOGLE_API_KEY = getenv("GOOGLE_API_KEY")
 TANKERKOENIG_API_KEY = getenv("TANKERKOENIG_API_KEY")
 
