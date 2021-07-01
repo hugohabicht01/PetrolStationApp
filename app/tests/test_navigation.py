@@ -1,17 +1,12 @@
 from unittest import TestCase
 from app.navigation import navigation
 from app.models import models
-from os.path import join, dirname
 from os import getenv
-from dotenv import load_dotenv
-from pprint import pprint
 import responses
 
 
 class TestNavigation(TestCase):
     def setUp(self):
-        dotenv_path = join(dirname(__file__), ".env")
-        load_dotenv(dotenv_path)
         self.api_key = getenv("GOOGLE_API_KEY")
 
     @responses.activate

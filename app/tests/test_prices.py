@@ -1,17 +1,13 @@
 from unittest import TestCase
 from app.petrolprices import prices
 from app.models import models
-from os.path import join, dirname
 from os import getenv
-from dotenv import load_dotenv
 
 
 class TestPriceFetching(TestCase):
     # TODO: Add proper unittests that test with failing and succeding testcases while mocking the actual API
     # TODO: Add integration tests
     def setUp(self):
-        dotenv_path = join(dirname(__file__), '.env')
-        load_dotenv(dotenv_path)
         self.api_key = getenv('TANKERKOENIG_API_KEY')
 
     def test_get_nearest_stations(self):
