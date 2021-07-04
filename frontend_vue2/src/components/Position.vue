@@ -1,19 +1,17 @@
 <template>
   <div>
-    <button @click="setPosGPS">Find my current position!</button>
-    <div v-if="errorWithGPS">
-      Error occured while attempting to find your current position, please enter your current
-      position manually
-    </div>
-    <div>or</div>
+    <button @click="setPosGPS">{{ $t('position.button') }}</button>
+    <div v-if="errorWithGPS">{{ $t('position.GPSError') }}</div>
+    <div>{{ $t('position.or') }}</div>
     <div>
       <Gmap-Autocomplete 
-      placeholder="Search for address..." 
+      :placeholder="$t('position.searchPlaceholder')" 
       @place_changed="setPlace"
       :options='{componentRestrictions: { country: "de" }}'>
       </Gmap-Autocomplete>
       <button @click="usePlace">Confirm</button>
     </div>
+    <!-- TODO: Maybe show address instead of coordinates -->
     <p v-if="foundCoordinates">
       Latitude: {{ currentLatitude }}, Longitude: {{ currentLongitude }}
     </p>

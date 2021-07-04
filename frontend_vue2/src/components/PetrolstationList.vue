@@ -1,6 +1,6 @@
 <template>
   <div>
-    <h1>List of petrolstations in your surrounding</h1>
+    <h1>{{ $t('PetrolStationList.heading') }}</h1>
     <div v-if="apiCallError">Error contacting server</div>
     <table>
       <tr>
@@ -20,6 +20,11 @@
         <td>{{ station.distance.text }}</td>
       </tr>
     </table>
+    <!-- TODO: Make this a separate component instead -->
+    <!-- 
+    TODO: Instead of fetching details about each station on demand,
+    just fetch details of all stations in advance to avoid loading delays 
+    -->
     <div>
       <h3>Details</h3>
       <div>ID: {{ detailsID }}</div>
