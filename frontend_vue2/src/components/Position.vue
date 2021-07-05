@@ -7,7 +7,9 @@
       <Gmap-Autocomplete 
       :placeholder="$t('position.searchPlaceholder')" 
       @place_changed="setPlace"
-      :options='{componentRestrictions: { country: "de" }}'>
+      :options='{componentRestrictions: { country: "de" }}'
+      id="gmap-autocomplete"
+      >
       </Gmap-Autocomplete>
       <button @click="usePlace">Confirm</button>
     </div>
@@ -104,4 +106,8 @@ export default {
 };
 </script>
 
-<style lang="sass" scoped></style>
+<style lang="scss" scoped>
+#gmap-autocomplete {
+  width: 35%;
+}
+</style>

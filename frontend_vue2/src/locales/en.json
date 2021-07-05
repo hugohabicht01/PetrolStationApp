@@ -20,6 +20,12 @@
     "btnSearch": "Search"
   },
   "PetrolStationList": {
-      "heading": "List of petrolstations in your surroundings"
+      "heading": "List of petrolstations in your surroundings",
+      "apiCallError": "Error contacting server, please try again later",
+      "name": "Name",
+      "pricePerLiter": "Price per liter",
+      "priceOverall": "Price overall",
+      "estimatedTime": "Estimated travel time",
+      "distance": "Distance"
   }
 }

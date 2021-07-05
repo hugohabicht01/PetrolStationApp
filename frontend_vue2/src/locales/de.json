@@ -20,6 +20,12 @@
     "btnSearch": "Suchen"
   },
   "PetrolStationList": {
-    "heading": "Suchergebnisse"
+    "heading": "Suchergebnisse",
+    "apiCallError": "Verbindung zum Server konnte nicht hergestellt werden, bitte versuchen Sie es später erneut",
+    "name": "Name",
+    "pricePerLiter": "Preis pro liter",
+    "priceOverall": "Preis insgesamt",
+    "estimatedTime": "Voraussichtliche Fahrtdauer",
+    "distance": "Distanz"
   }
 }
