@@ -95,9 +95,9 @@ class Details(BaseModel):
         overrides: List[str]
         wholeDay: bool
         isOpen: bool
-        e5: float
-        e10: float
-        diesel: float
+        e5: float = None
+        e10: float = None
+        diesel: float = None
         lat: float
         lng: float
         state: Union[str, None]
