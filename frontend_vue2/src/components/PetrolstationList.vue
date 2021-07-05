@@ -1,15 +1,15 @@
 <template>
   <div>
-    <h1>List of petrolstations in your surrounding</h1>
-    <div v-if="apiCallError">Error contacting server</div>
+    <h1>{{ $t('PetrolStationList.heading') }}</h1>
+    <div v-if="apiCallError">{{ $t('PetrolStationList.apiCallError')}}</div>
     <table>
       <tr>
-        <th @click="SortStationsAlphabetically">Name</th>
-        <th @click="SortStationsByPricePerLiter">Price per liter</th>
+        <th @click="SortStationsAlphabetically">{{ $t('PetrolStationList.name') }}</th>
+        <th @click="SortStationsByPricePerLiter">{{ $t('PetrolStationList.pricePerLiter') }}</th>
         <!-- TODO: Add some kind of icon that shows which column is currently sorted and in which way -->
-        <th @click="SortStationsByOverallPrice">Price overall</th>
-        <th @click="SortStationsByTravelTime">Estimated travel time</th>
-        <th @click="SortStationsByDistance">Distance</th>
+        <th @click="SortStationsByOverallPrice">{{ $t('PetrolStationList.priceOverall') }}</th>
+        <th @click="SortStationsByTravelTime">{{ $t('PetrolStationList.estimatedTime') }}</th>
+        <th @click="SortStationsByDistance">{{ $t('PetrolStationList.distance') }}</th>
       </tr>
       <!-- TODO: Add a popup with details about each station -->
       <tr v-for="station in getStations" :key="station.id" @click="getDetails(station.id)">
@@ -20,6 +20,11 @@
         <td>{{ station.distance.text }}</td>
       </tr>
     </table>
+    <!-- TODO: Make this a separate component instead -->
+    <!-- 
+    TODO: Instead of fetching details about each station on demand,
+    just fetch details of all stations in advance to avoid loading delays 
+    -->
     <div>
       <h3>Details</h3>
       <div>ID: {{ detailsID }}</div>
@@ -41,8 +46,8 @@ import { mapState, mapGetters, mapMutations } from 'vuex';
 import store from '../store/index';
 export default {
   computed: {
-    ...mapGetters(['apiCallError', 'getStations']),
-    ...mapState(['detailsID', 'details']),
+    ...mapGetters(['getStations']),
+    ...mapState(['detailsID', 'details', 'apiCallError']),
   },
   methods: {
     ...mapMutations([

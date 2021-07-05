@@ -1,0 +1,31 @@
+{
+  "message": "Hi i18n !!",
+  "title": "PetrolStationApp",
+  "position": {
+    "button": "Find my current position!",
+    "GPSError": "Error occured while attempting to find your current position, please enter your current address into the search box",
+    "or": "or",
+    "searchPlaceholder": "Search for address..."
+  },
+  "SearchForm": {
+    "heading": "Find petrol stations in your surroundings",
+    "petrol": "Petrol",
+    "selectPlaceholder": "Please select one",
+    "radius": "Radius",
+    "tankfill": "Fuel needed",
+    "showAdvanced": "Show advanced options",
+    "hideAdvanced": "Hide advanced options",
+    "avgConsumptionCity": "Average fuelconsumption in city traffic",
+    "avgConsumptionMotorway": "Average fuelconsumption on motorway",
+    "btnSearch": "Search"
+  },
+  "PetrolStationList": {
+      "heading": "List of petrolstations in your surroundings",
+      "apiCallError": "Error contacting server, please try again later",
+      "name": "Name",
+      "pricePerLiter": "Price per liter",
+      "priceOverall": "Price overall",
+      "estimatedTime": "Estimated travel time",
+      "distance": "Distance"
+  }
+}

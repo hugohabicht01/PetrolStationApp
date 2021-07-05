@@ -1,0 +1,31 @@
+{
+  "message": "Hallo i18n !!",
+  "title": "TankstellenApp",
+  "position": {
+    "button": "Deinen Standort finden",
+    "GPSError": "Dein Standort konnte leider nicht festgestellt werden, bitte gib deine aktuelle Addresse in die Suchbox ein",
+    "or": "oder",
+    "searchPlaceholder": "Adresse eingeben..."
+  },
+  "SearchForm": {
+    "heading": "Tankstellen in der Umgebung finden",
+    "petrol": "Kraftstoff",
+    "selectPlaceholder": "Bitte wählen",
+    "radius": "Umkreis",
+    "tankfill": "Tankfüllung",
+    "showAdvanced": "Erweiterte Optionen anzeigen",
+    "hideAdvanced": "Erweiterte Optionen verbergen",
+    "avgConsumptionCity": "Durchschnittlicher Verbrauch in Stadtverkehr",
+    "avgConsumptionMotorway": "Durchschnittlicher Verbrauch auf der Autobahn",
+    "btnSearch": "Suchen"
+  },
+  "PetrolStationList": {
+    "heading": "Suchergebnisse",
+    "apiCallError": "Verbindung zum Server konnte nicht hergestellt werden, bitte versuchen Sie es später erneut",
+    "name": "Name",
+    "pricePerLiter": "Preis pro liter",
+    "priceOverall": "Preis insgesamt",
+    "estimatedTime": "Voraussichtliche Fahrtdauer",
+    "distance": "Distanz"
+  }
+}

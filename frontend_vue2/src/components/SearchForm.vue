@@ -1,11 +1,11 @@
 <template>
   <div class="petrolstations">
-    <h2>Find petrol stations in your surrounding</h2>
+    <h2>{{ $t('SearchForm.heading') }}</h2>
     <form class="form">
       <div class="forminputs">
-        <label for="petroltypes">Petrol:</label>
+        <label for="petroltypes">{{ $t('SearchForm.petrol') }}:</label>
         <select id="petroltypes" name="petroltypes" v-model="petroltype">
-          <option disabled value="">Please select one</option>
+          <option disabled value="">{{ $t('SearchForm.selectPlaceholder') }}</option>
           <option value="diesel">Diesel</option>
           <option value="e5">Super E5</option>
           <option value="e10">Super E10</option>
@@ -13,7 +13,7 @@
       </div>
       <br />
       <div class="forminputs">
-        <label for="radiusslider">Radius:</label>
+        <label for="radiusslider">{{ $t('SearchForm.radius') }}:</label>
         <input
           type="range"
           name="radiusslider"
@@ -27,7 +27,7 @@
       </div>
       <br />
       <div class="forminputs">
-        <label for="tankfillslider">Fuel:</label>
+        <label for="tankfillslider">{{ $t('SearchForm.tankfill') }}:</label>
         <input
           type="range"
           name="tankfillslider"
@@ -39,15 +39,18 @@
         />
         <label for="tankfillslider">{{ tankfill }} litre</label>
       </div>
-      <input
+      <!-- <input
         type="button"
         @click="showAdvanced = !showAdvanced"
         :value="advancedOptionsButtonText"
         id="btnAdvancedOptions"
-      />
+      /> -->
+      <button @click.prevent="showAdvanced = !showAdvanced" id="btnAdvancedOptions">
+        {{ showAdvanced ? $t('SearchForm.hideAdvanced') : $t('SearchForm.showAdvanced') }}
+      </button>
       <div class="advancedOptions" v-show="showAdvanced">
         <div class="forminputs">
-          <label for="avgConsumptionCity">Average fuelconsumption in city traffic</label>
+          <label for="avgConsumptionCity">{{ $t('SearchForm.avgConsumptionCity') }}</label>
           <input
             type="range"
             name="avgConsumptionCity"
@@ -62,7 +65,7 @@
           </label>
         </div>
         <div class="forminputs">
-          <label for="avgConsumptionMotorway">Average fuelconsumption on motorway</label>
+          <label for="avgConsumptionMotorway">{{ $t('SearchForm.avgConsumptionMotorway') }}</label>
           <input
             type="range"
             name="avgConsumptionMotorway"
@@ -80,7 +83,7 @@
       <div>
         <input
           type="button"
-          value="Start the search!"
+          :value="$t('SearchForm.btnSearch')"
           @click="searchForStations"
           :disabled="petroltype === ''"
         />
@@ -116,9 +119,9 @@ export default {
     },
   },
   computed: {
-    advancedOptionsButtonText() {
-      return this.showAdvanced ? 'Hide advanced options' : 'Show advanced options';
-    },
+    // advancedOptionsButtonText() {
+    //   return this.showAdvanced ? $t('SearchForm.hideAdvanced') : $t('SearchForm.showAdvanced');
+    // },
   },
   filters: {
     formatToOneDecimal: (value) => {
