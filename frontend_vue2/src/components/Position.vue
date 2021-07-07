@@ -1,6 +1,8 @@
 <template>
   <div>
     <button @click="setPosGPS">{{ $t('position.button') }}</button>
+    TODO: Use gmap js lib to find place id, otherwise the directions map wont work!!!!!
+
     <div v-if="errorWithGPS">{{ $t('position.GPSError') }}</div>
     <div>{{ $t('position.or') }}</div>
     <div>
@@ -29,24 +31,11 @@
       v-if="foundCoordinates"
       />
     </GmapMap>
-    <!-- <iframe
-      width="600"
-      height="450"
-      style="border: 0"
-      loading="lazy"
-      allowfullscreen
-      :src="
-        'https://www.google.com/maps/embed/v1/place?key=AIzaSyD6z4WhJMY85Xgc9ZIRTMbCgr1zfSIMhUg&zoom=5&q=' +
-        formattedCoords
-      "
-      v-if="foundCoordinates"
-    >
-    </iframe> -->
   </div>
 </template>
 
 <script>
-import { mapGetters } from 'vuex';
+import { mapGetters, mapState } from 'vuex';
 import store from '../store/index';
 
 export default {
@@ -56,14 +45,17 @@ export default {
     place: null,
     mapZoom: 5,
   }),
-  computed: mapGetters([
-    'currentLatitude',
-    'currentLongitude',
-    'formattedCoords',
+  computed: {
+    ...mapGetters([
     'coords',
     'errorWithGPS',
     'foundCoordinates',
   ]),
+    ...mapState({
+      currentLatitude: state => state.currentCoordinates.latitude,
+      currentLongitude: state => state.currentCoordinates.longitude
+    })
+  },
   methods: {
     zoomMapTo(lat, lng, zoom) {
       this.$refs.googlemap.panTo({lat, lng});

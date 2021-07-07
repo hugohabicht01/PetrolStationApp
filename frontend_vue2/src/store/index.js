@@ -10,6 +10,8 @@ const store = new Vuex.Store({
       longitude: undefined,
       err: false,
     },
+    place: {},
+    gmapAPIKey: "AIzaSyD6z4WhJMY85Xgc9ZIRTMbCgr1zfSIMhUg",
     apiData: {
       ok: undefined,
       petrolStations: [],
@@ -32,6 +34,9 @@ const store = new Vuex.Store({
       state.currentCoordinates.latitude = coords.latitude;
       state.currentCoordinates.longitude = coords.longitude;
       state.currentCoordinates.err = coords.error;
+    },
+    setPlace(state, place) {
+      state.place = place
     },
     setPetrolstations(state, apiData) {
       state.apiData.ok = apiData.ok;
@@ -82,17 +87,10 @@ const store = new Vuex.Store({
     }
   },
   getters: {
-    currentLatitude: (state) => state.currentCoordinates.latitude,
-    currentLongitude: (state) => state.currentCoordinates.longitude,
     foundCoordinates(state) {
       return state.currentCoordinates.latitude && state.currentCoordinates.longitude;
     },
     errorWithGPS: (state) => state.currentCoordinates.err,
-    formattedCoords: (state) => {
-      const lat = state.currentCoordinates.latitude;
-      const lng = state.currentCoordinates.longitude;
-      return `${lat},${lng}`;
-    },
     coords: (state) => ({ lat: state.currentCoordinates.latitude, lng: state.currentCoordinates.longitude }),
     apiCallError: (state) => state.apiCallError,
     getStations: (state) => state.apiData.petrolStations,

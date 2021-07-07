@@ -11,7 +11,6 @@
         <th @click="SortStationsByTravelTime">{{ $t('PetrolStationList.estimatedTime') }}</th>
         <th @click="SortStationsByDistance">{{ $t('PetrolStationList.distance') }}</th>
       </tr>
-      <!-- TODO: Add a popup with details about each station -->
       <tr v-for="station in getStations" :key="station.id" @click="getDetails(station.id)">
         <td>{{ station.name }}</td>
         <td>{{ station.price }}</td>
@@ -20,34 +19,27 @@
         <td>{{ station.distance.text }}</td>
       </tr>
     </table>
-    <!-- TODO: Make this a separate component instead -->
     <!-- 
     TODO: Instead of fetching details about each station on demand,
     just fetch details of all stations in advance to avoid loading delays 
     -->
-    <div>
-      <h3>Details</h3>
-      <div>ID: {{ detailsID }}</div>
-      <div>{{ details.brand }} {{ details.name }}</div>
-      <div>
-        {{ details.street }} {{ details.houseNumber }}, {{ details.postCode }} {{ details.place }}
-      </div>
-      <!-- TODO: Colour it green/red -->
-      <div>{{ details.isOpen ? 'Open' : 'Closed' }}</div>
-      <span>Diesel: {{ details.diesel }} </span>
-      <span>Super E5: {{ details.e5 }} </span>
-      <span>Super E10: {{ details.e10 }}</span>
-    </div>
+    <Details
+    v-bind:details="details"
+    v-bind:currentPosition="coords"
+    v-bind:apikey="gmapAPIKey"
+    v-if="details !== undefined">
+    </Details>
   </div>
 </template>
 
 <script>
 import { mapState, mapGetters, mapMutations } from 'vuex';
 import store from '../store/index';
+import Details from '@/components/Details.vue'
 export default {
   computed: {
-    ...mapGetters(['getStations']),
-    ...mapState(['detailsID', 'details', 'apiCallError']),
+    ...mapGetters(['getStations', 'coords']),
+    ...mapState(['apiCallError', 'apiURL', 'place', 'gmapAPIKey']),
   },
   methods: {
     ...mapMutations([
@@ -58,17 +50,31 @@ export default {
       'SortStationsAlphabetically',
     ]),
     getDetails(id) {
-      store.commit('setDetailsID', id);
-      store.dispatch('detailsPetrolStation');
+      // store.commit('setDetailsID', id);
+      // store.dispatch('detailsPetrolStation');
+      let url = new URL('details', this.apiURL);
+      url.searchParams.append("id", id);
+
+      fetch(url)
+      .then(resp => resp.json())
+      .then(data => this.details = data.details)
+      .then(this.showDetails = true)
+      // .catch( err => commit('setAPICallError', err))
+      // TODO: Handle errors
     },
   },
-  data: {},
+  data: () => ({
+    details: undefined
+  }),
   filters: {
     formatToTwoDecimals: (value) => {
       const num = parseFloat(value);
       return num.toFixed(2);
     },
   },
+  components: {
+    Details
+  }
 };
 </script>
 

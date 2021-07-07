@@ -27,5 +27,10 @@
     "priceOverall": "Preis insgesamt",
     "estimatedTime": "Voraussichtliche Fahrtdauer",
     "distance": "Distanz"
+  },
+  "Details": {
+    "openingTimes": "Öffnungszeiten",
+    "until": "bis",
+    "directions": "Routenplanung"
   }
 }
