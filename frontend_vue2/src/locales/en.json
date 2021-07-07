@@ -27,5 +27,10 @@
       "priceOverall": "Price overall",
       "estimatedTime": "Estimated travel time",
       "distance": "Distance"
+  },
+  "Details": {
+    "openingTimes": "Opening times",
+    "until": "until",
+    "directions": "Directions"
   }
 }
