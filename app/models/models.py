@@ -68,8 +68,8 @@ class PetrolStation(BaseModel):
     dist: float
     price: Price
     isOpen: bool
-    houseNumber: str
-    postCode: int
+    houseNumber: str = None
+    postCode: int = None
 
     fuel_to_get_there: float = None
     price_to_get_there: float = None
