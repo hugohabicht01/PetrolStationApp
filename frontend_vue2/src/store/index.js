@@ -25,8 +25,6 @@ const store = new Vuex.Store({
       avgConsumptionCity: 12.0,
       avgConsumptionMotorway: 7.2,
     },
-    detailsID: undefined,
-    details: {},
     apiURL: 'https://hugohabicht01-petrolstationapp-qg7gpjqrhgpp-8000.githubpreview.dev',
   },
   mutations: {
