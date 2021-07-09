@@ -1,9 +1,6 @@
 <template>
   <div>
     <button @click="setPosGPS">{{ $t('position.button') }}</button>
-    <!-- TODO: Use gmap js lib to find place id, otherwise the directions map wont work!!!!! 
-    Turns out, coordinates work too, so this shouldn't be needed -->
-
     <div v-if="errorWithGPS">{{ $t('position.GPSError') }}</div>
     <div>{{ $t('position.or') }}</div>
     <div>
@@ -18,7 +15,6 @@
       </Gmap-Autocomplete>
       <button @click="usePlace">{{ $t('position.confirm') }}</button>
     </div>
-    <!-- TODO: Maybe show address instead of coordinates -->
     <p v-if="foundCoordinates">
       Latitude: {{ currentLatitude }}, Longitude: {{ currentLongitude }}
       Place: {{ place.formatted_address }}
@@ -95,8 +91,6 @@ export default {
       this.mapZoom = zoom;
     },
     setPosGPS() {
-      // TODO: This needs to do a reverse geo lookup
-      // otherwise the directions module won't work
       navigator.geolocation.getCurrentPosition(
         (pos) => {
           const coords = {
@@ -104,8 +98,10 @@ export default {
             longitude: pos.coords.longitude,
             error: false,
           };
+
           store.commit('setCurrentCoordinates', coords);
           this.zoomMapTo(coords.latitude, coords.longitude, 12);
+
           // Set place to later use for directions
           const geocoder = new this.google.maps.Geocoder();
           geocoder
