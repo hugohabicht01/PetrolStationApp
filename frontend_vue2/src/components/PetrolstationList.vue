@@ -1,7 +1,7 @@
 <template>
   <div>
     <h1>{{ $t('PetrolStationList.heading') }}</h1>
-    <div v-if="apiCallError">{{ $t('PetrolStationList.apiCallError')}}</div>
+    <div v-if="apiCallError">{{ $t('PetrolStationList.apiCallError') }}</div>
     <table>
       <tr>
         <th @click="SortStationsAlphabetically">{{ $t('PetrolStationList.name') }}</th>
@@ -23,23 +23,18 @@
     TODO: Instead of fetching details about each station on demand,
     just fetch details of all stations in advance to avoid loading delays 
     -->
-    <Details
-    v-bind:details="details"
-    v-bind:currentPosition="coords"
-    v-bind:apikey="gmapAPIKey"
-    v-if="details !== undefined">
-    </Details>
+    <Details :details="details" v-if="details !== undefined" :err="detailsError"> </Details>
   </div>
 </template>
 
 <script>
 import { mapState, mapGetters, mapMutations } from 'vuex';
 import store from '../store/index';
-import Details from '@/components/Details.vue'
+import Details from '@/components/Details.vue';
 export default {
   computed: {
     ...mapGetters(['getStations', 'coords']),
-    ...mapState(['apiCallError', 'apiURL', 'place', 'gmapAPIKey']),
+    ...mapState(['apiCallError', 'apiURL', 'place']),
   },
   methods: {
     ...mapMutations([
@@ -53,18 +48,38 @@ export default {
       // store.commit('setDetailsID', id);
       // store.dispatch('detailsPetrolStation');
       let url = new URL('details', this.apiURL);
-      url.searchParams.append("id", id);
+      url.searchParams.append('id', id);
 
       fetch(url)
-      .then(resp => resp.json())
-      .then(data => this.details = data.details)
-      .then(this.showDetails = true)
-      // .catch( err => commit('setAPICallError', err))
-      // TODO: Handle errors
+        .then((resp) => resp.json())
+        .then((data) => (this.details = data.details))
+        .then((this.showDetails = true))
+        .then(() => {
+          // This is only needed once,
+          // but the event handler destructs itself after the first time
+          // so the event will just go into the void
+          const setupDirections = new CustomEvent('setup-directions');
+          document.dispatchEvent(setupDirections);
+
+          // Show directions in map
+          let self = this;
+          const renderDirections = new CustomEvent('render-directions', {
+            detail: {
+              start: self.place.formatted_address,
+              end: `${self.details.place} ${self.details.street} ${self.details.houseNumber}`,
+            },
+          });
+          document.dispatchEvent(renderDirections);
+        })
+        .catch((err) => {
+          console.log(err);
+          this.detailsError = 'Failed to fetch details';
+        });
     },
   },
   data: () => ({
-    details: undefined
+    details: undefined,
+    detailsError: '',
   }),
   filters: {
     formatToTwoDecimals: (value) => {
@@ -73,8 +88,8 @@ export default {
     },
   },
   components: {
-    Details
-  }
+    Details,
+  },
 };
 </script>
 
