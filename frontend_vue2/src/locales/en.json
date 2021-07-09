@@ -5,7 +5,8 @@
     "button": "Find my current position!",
     "GPSError": "Error occured while attempting to find your current position, please enter your current address into the search box",
     "or": "or",
-    "searchPlaceholder": "Search for address..."
+    "searchPlaceholder": "Search for address...",
+    "confirm": "Confirm"
   },
   "SearchForm": {
     "heading": "Find petrol stations in your surroundings",

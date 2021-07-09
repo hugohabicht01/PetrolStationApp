@@ -10,15 +10,18 @@
       <Gmap-Autocomplete
         :placeholder="$t('position.searchPlaceholder')"
         @place_changed="setPlace"
+        @keyup.enter.native="usePlace"
         :options="{ componentRestrictions: { country: 'de' } }"
+        :select-first-on-enter="true"
         id="gmap-autocomplete"
       >
       </Gmap-Autocomplete>
-      <button @click="usePlace">Confirm</button>
+      <button @click="usePlace">{{ $t('position.confirm') }}</button>
     </div>
     <!-- TODO: Maybe show address instead of coordinates -->
     <p v-if="foundCoordinates">
       Latitude: {{ currentLatitude }}, Longitude: {{ currentLongitude }}
+      Place: {{ place.formatted_address }}
     </p>
     <GmapMap
       :center="{ lat: 51.163361, lng: 10.447683 }"
@@ -29,12 +32,6 @@
       <!-- Middle point of Germany to center the map-->
       <GmapMarker :position="coords" v-if="foundCoordinates" />
     </GmapMap>
-    <div>
-      Origin:<input type="text" v-model="origin" />
-      <br />
-      Destination: <input type="text" v-model="destination" />
-      <button @click.prevent="calculateDirections(origin, destination)">Search</button>
-    </div>
   </div>
 </template>
 
@@ -51,42 +48,38 @@ export default {
     mapZoom: 5,
     directionsService: {},
     directionsRenderer: {},
-    origin: '',
-    destination: '',
   }),
   mounted: async function () {
-    // TODO: Nothing emits this events as of right now, fix it
-    this.$root.$on('setup-directions', function () {
-      let self = this;
-      this.$gmapApiPromiseLazy().then(() => {
-        this.$nextTick(() => {
-          self.directionsService = new google.maps.DirectionsService();
-          self.directionsRenderer = new google.maps.DirectionsRenderer();
-          // console.log(this.$refs.googlemap);
-          console.log(self.$refs.googlemap);
-          // TODO: This doesn't work...
-          self.directionsRenderer.setMap(self.$refs.googlemap.$mapObject);
-        });
+    let self = this;
+    const setupDirections = () => {
+      self.directionsService = new self.google.maps.DirectionsService();
+      self.directionsRenderer = new self.google.maps.DirectionsRenderer();
+      self.directionsRenderer.setMap(self.$refs.googlemap.$mapObject);
+
+      // Once setup, it's not needed anymore
+      document.removeEventListener('setup-directions', setupDirections)
+    }
+
+    document.addEventListener('setup-directions', setupDirections);
+
+    document.addEventListener('render-directions', (e) => {
+      const options = {
+        origin: {
+          query: e.detail.start,
+        },
+        destination: {
+          query: e.detail.end,
+        },
+        travelMode: self.google.maps.TravelMode.DRIVING,
+      };
+
+      self.directionsService
+      .route(
+        options
+      ).then((response) => {
+        self.directionsRenderer.setDirections(response);
       });
     });
-    // this.$root.$on('render-directions', function (start, end) {
-    //   console.log(this.directionsService);
-    //   console.log(this.directionsRenderer);
-    //   // calculateDirections(start, end)
-    //   this.directionsService
-    //     .route({
-    //       origin: {
-    //         query: start,
-    //       },
-    //       destination: {
-    //         query: end,
-    //       },
-    //       travelMode: google.maps.TravelMode.DRIVING,
-    //     })
-    //     .then((response) => {
-    //       this.directionsRenderer.setDirections(response);
-    //     });
-    // });
   },
   computed: {
     ...mapGetters(['coords', 'errorWithGPS', 'foundCoordinates']),
@@ -101,31 +94,9 @@ export default {
       this.$refs.googlemap.panTo({ lat, lng });
       this.mapZoom = zoom;
     },
-    calculateDirections(start, end) {
-      this.directionsService = new google.maps.DirectionsService();
-      this.directionsRenderer = new google.maps.DirectionsRenderer();
-      // console.log(this.$refs.googlemap);
-      // console.log(self.$refs.googlemap);
-      // console.log(this.$refs.googlemap.$mapObject)
-      // console.log(self.$refs.googlemap.$mapObject)
-      // I'm pretty sure that this isn't the actual object and that is why the directions stuff doesn't show up
-      this.directionsRenderer.setMap(this.$refs.googlemap.$mapObject);
-
-      this.directionsService
-        .route({
-          origin: {
-            query: start,
-          },
-          destination: {
-            query: end,
-          },
-          travelMode: google.maps.TravelMode.DRIVING,
-        })
-        .then((response) => {
-          this.directionsRenderer.setDirections(response);
-        });
-    },
     setPosGPS() {
+      // TODO: This needs to do a reverse geo lookup
+      // otherwise the directions module won't work
       navigator.geolocation.getCurrentPosition(
         (pos) => {
           const coords = {
@@ -135,6 +106,24 @@ export default {
           };
           store.commit('setCurrentCoordinates', coords);
           this.zoomMapTo(coords.latitude, coords.longitude, 12);
+          // Set place to later use for directions
+          const geocoder = new this.google.maps.Geocoder();
+          geocoder
+          .geocode({
+            location: {
+              lat: coords.latitude,
+              lng: coords.longitude
+            }
+          })
+          .then((response) => {
+            if (response.results[0]) {
+              this.place = response.results[0]
+              store.commit('setPlace', response.results[0])
+            } else {
+              console.log("Couldn't reverse geocode coordinates")
+            }
+          })
+          .catch((e) => console.log(`Geocoder failed due to: ${e}`))
         },
         (err) => {
           console.log(`Error getting current coordinates. ERROR: ${err}`);
@@ -155,6 +144,7 @@ export default {
         const lng = this.place.geometry.location.lng();
         this.setPosManually(lat, lng);
         this.zoomMapTo(lat, lng, 12);
+        store.commit('setPlace', this.place)
       }
     },
   },

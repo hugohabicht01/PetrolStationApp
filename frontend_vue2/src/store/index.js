@@ -11,7 +11,6 @@ const store = new Vuex.Store({
       err: false,
     },
     place: {},
-    gmapAPIKey: "AIzaSyD6z4WhJMY85Xgc9ZIRTMbCgr1zfSIMhUg",
     apiData: {
       ok: undefined,
       petrolStations: [],
