@@ -31,6 +31,8 @@
   "Details": {
     "openingTimes": "Opening times",
     "until": "until",
-    "directions": "Directions"
+    "directions": "Directions",
+    "open": "Open",
+    "closed": "Closed"
   }
 }

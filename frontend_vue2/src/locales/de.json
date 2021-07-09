@@ -31,6 +31,8 @@
   "Details": {
     "openingTimes": "Öffnungszeiten",
     "until": "bis",
-    "directions": "Routenplanung"
+    "directions": "Routenplanung",
+    "open": "Offen",
+    "closed": "Geschlossen"
   }
 }

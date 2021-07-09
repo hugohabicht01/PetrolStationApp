@@ -1,6 +1,6 @@
 <template>
   <div id="app">
-    <h1>{{ $t('title')}}</h1>
+    <h1>{{ $t('title') }}</h1>
     <Position />
     <SearchForm />
     <PetrolstationList />

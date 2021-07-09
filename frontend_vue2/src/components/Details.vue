@@ -6,8 +6,9 @@
     <div>
       {{ details.street }} {{ details.houseNumber }}, {{ details.postCode }} {{ details.place }}
     </div>
-    <!-- TODO: Colour it green/red -->
-    <div>{{ details.isOpen ? 'Open' : 'Closed' }}</div>
+    <div :class="{ open: details.isOpen, closed: !details.isOpen }">
+      {{ details.isOpen ? $t('Details.open') : $t('Details.closed') }}
+    </div>
     <table>
       <tr v-if="typeof details.diesel === 'number'">
         <td>Diesel</td>
@@ -22,7 +23,6 @@
         <td>{{ details.e10 }}</td>
       </tr>
     </table>
-    <!-- TODO: Add opening times -->
     <div v-if="details.openingTimes.length !== 0">
       <h4>{{ $t('Details.openingTimes') }}</h4>
       <table>
@@ -35,6 +35,7 @@
 
     <div>
       <h4>{{ $t('Details.directions') }}</h4>
+      <!-- TODO:Instead of loading a new map, use the main map -->
       <iframe
         width="600"
         height="450"
@@ -59,13 +60,10 @@ export default {
         apikey: google maps api key
       Returns:
         src URL for embedded map
-      */ 
-      console.log(`curr: ${curr}`)
-      console.log(`station: ${station}`)
-      const current = `${curr.lat},${curr.lng}`
-      const dest = `${station.lat},${station.lng}`
+      */
+      const current = `${curr.lat},${curr.lng}`;
+      const dest = `${station.lat},${station.lng}`;
 
-      console.log(dest)
       let url = new URL('https://www.google.com/maps/embed/v1/directions');
       const params = {
         origin: current,
@@ -75,7 +73,7 @@ export default {
       for (const key in params) {
         url.searchParams.append(key, params[key]);
       }
-      console.log(url.href)
+      console.log(url.href);
       return url.href;
     },
   },
@@ -83,4 +81,10 @@ export default {
 </script>
 
 <style>
+.open {
+  color: rgb(2, 197, 2);
+}
+.closed {
+  color: rgb(255, 43, 43);
+}
 </style>
