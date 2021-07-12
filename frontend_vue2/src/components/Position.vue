@@ -16,16 +16,33 @@
       <button @click="usePlace">{{ $t('position.confirm') }}</button>
     </div>
     <p v-if="foundCoordinates">
-      Latitude: {{ currentLatitude }}, Longitude: {{ currentLongitude }}
-      Place: {{ place.formatted_address }}
+      Latitude: {{ currentLatitude }}, Longitude: {{ currentLongitude }} Place:
+      {{ place.formatted_address }}
     </p>
+    <!-- Middle point of Germany to center the map-->
     <GmapMap
       :center="{ lat: 51.163361, lng: 10.447683 }"
       :zoom="mapZoom"
       ref="googlemap"
       style="width: 600px; height: 450px"
     >
-      <!-- Middle point of Germany to center the map-->
+      <GmapInfoWindow
+        :options="infoOptions"
+        :position="infoWindowPos"
+        :opened="infoWinOpen"
+        @closeclick="infoWinOpen = false"
+      >
+      </GmapInfoWindow>
+      <!-- TODO: Replace icon with a proper icon -->
+      <GmapMarker
+        :key="station.id"
+        v-for="station in getStationsPositions"
+        :position="station.position"
+        :clickable="true"
+        @click="toggleInfoWindow(station)"
+        icon="https://developers.google.com/maps/documentation/javascript/examples/full/images/beachflag.png"
+      ></GmapMarker>
+
       <GmapMarker :position="coords" v-if="foundCoordinates && !directionsRenderingMode" />
       <!-- TODO: Show marker for each station and focus them in the list when clicked on -->
     </GmapMap>
@@ -45,18 +62,28 @@ export default {
     mapZoom: 5,
     directionsService: {},
     directionsRenderer: {},
-    directionsRenderingMode: false 
+    directionsRenderingMode: false,
+    infoWindowPos: null,
+    infoWinOpen: false,
+    currentMidx: null,
+    infoOptions: {
+      content: '',
+      //optional: offset infowindow so it visually sits nicely on top of our marker
+      pixelOffset: {
+        width: 0,
+        height: -35,
+      },
+    },
   }),
   mounted: async function () {
-    let self = this;
     const setupDirections = () => {
-      self.directionsService = new self.google.maps.DirectionsService();
-      self.directionsRenderer = new self.google.maps.DirectionsRenderer();
-      self.directionsRenderer.setMap(self.$refs.googlemap.$mapObject);
+      this.directionsService = new this.google.maps.DirectionsService();
+      this.directionsRenderer = new this.google.maps.DirectionsRenderer();
+      this.directionsRenderer.setMap(this.$refs.googlemap.$mapObject);
 
       // Once setup, it's not needed anymore
-      document.removeEventListener('setup-directions', setupDirections)
-    }
+      document.removeEventListener('setup-directions', setupDirections);
+    };
 
     document.addEventListener('setup-directions', setupDirections);
 
@@ -68,20 +95,17 @@ export default {
         destination: {
           query: e.detail.end,
         },
-        travelMode: self.google.maps.TravelMode.DRIVING,
+        travelMode: this.google.maps.TravelMode.DRIVING,
       };
 
-      self.directionsService
-      .route(
-        options
-      ).then((response) => {
-        self.directionsRenderer.setDirections(response);
+      this.directionsService.route(options).then((response) => {
+        this.directionsRenderer.setDirections(response);
       });
-      self.directionsRenderingMode = true
+      this.directionsRenderingMode = true;
     });
   },
   computed: {
-    ...mapGetters(['coords', 'errorWithGPS', 'foundCoordinates']),
+    ...mapGetters(['coords', 'errorWithGPS', 'foundCoordinates', 'getStationsPositions']),
     ...mapState({
       currentLatitude: (state) => state.currentCoordinates.latitude,
       currentLongitude: (state) => state.currentCoordinates.longitude,
@@ -106,28 +130,28 @@ export default {
           this.zoomMapTo(coords.latitude, coords.longitude, 12);
           // If no directions have been rendered yet, don't try to erase directions
           if (this.directionsRenderingMode) {
-            this.directionsRenderer.set('directions', null)
+            this.directionsRenderer.set('directions', null);
           }
-          this.directionsRenderingMode = false
+          this.directionsRenderingMode = false;
 
           // Set place to later use for directions
           const geocoder = new this.google.maps.Geocoder();
           geocoder
-          .geocode({
-            location: {
-              lat: coords.latitude,
-              lng: coords.longitude
-            }
-          })
-          .then((response) => {
-            if (response.results[0]) {
-              this.place = response.results[0]
-              store.commit('setPlace', response.results[0])
-            } else {
-              console.log("Couldn't reverse geocode coordinates")
-            }
-          })
-          .catch((e) => console.log(`Geocoder failed due to: ${e}`))
+            .geocode({
+              location: {
+                lat: coords.latitude,
+                lng: coords.longitude,
+              },
+            })
+            .then((response) => {
+              if (response.results[0]) {
+                this.place = response.results[0];
+                store.commit('setPlace', response.results[0]);
+              } else {
+                console.log("Couldn't reverse geocode coordinates");
+              }
+            })
+            .catch((e) => console.log(`Geocoder failed due to: ${e}`));
         },
         (err) => {
           console.log(`Error getting current coordinates. ERROR: ${err}`);
@@ -151,11 +175,35 @@ export default {
         this.zoomMapTo(lat, lng, 12);
 
         if (this.directionsRenderingMode) {
-          this.directionsRenderer.set('directions', null)
+          this.directionsRenderer.set('directions', null);
         }
-        this.directionsRenderingMode = false
+        this.directionsRenderingMode = false;
 
-        store.commit('setPlace', this.place)
+        store.commit('setPlace', this.place);
+      }
+    },
+    toggleInfoWindow: function (marker) {
+      // TODO: Maybe get some images via google maps places API
+      // or atleast provide localization
+      // TODO: When opening a marker, show details with Details.vue
+      const popupContent = `<h3>${marker.name}</h3>
+      <div>
+        <b>Price: ${marker.price}</b>
+        <b>Distance: ${marker.distance.text}</b>
+      </div`
+
+      this.infoWindowPos = marker.position;
+      this.infoOptions.content = popupContent;
+
+      //check if its the same marker that was selected if yes toggle
+      if (this.currentMidx == marker.id) {
+        this.infoWinOpen = !this.infoWinOpen;
+      }
+
+      //if different marker set infowindow to open and reset current marker index
+      else {
+        this.infoWinOpen = true;
+        this.currentMidx = marker.id;
       }
     },
   },
