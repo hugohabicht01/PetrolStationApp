@@ -104,8 +104,11 @@ export default {
 
           store.commit('setCurrentCoordinates', coords);
           this.zoomMapTo(coords.latitude, coords.longitude, 12);
+          // If no directions have been rendered yet, don't try to erase directions
+          if (this.directionsRenderingMode) {
+            this.directionsRenderer.set('directions', null)
+          }
           this.directionsRenderingMode = false
-          this.directionsRenderer.set('directions', null)
 
           // Set place to later use for directions
           const geocoder = new this.google.maps.Geocoder();
@@ -143,10 +146,15 @@ export default {
       if (this.place) {
         const lat = this.place.geometry.location.lat();
         const lng = this.place.geometry.location.lng();
+
         this.setPosManually(lat, lng);
         this.zoomMapTo(lat, lng, 12);
+
+        if (this.directionsRenderingMode) {
+          this.directionsRenderer.set('directions', null)
+        }
         this.directionsRenderingMode = false
-        this.directionsRenderer.set('directions', null)
+
         store.commit('setPlace', this.place)
       }
     },
