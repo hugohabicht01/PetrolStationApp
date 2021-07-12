@@ -33,7 +33,7 @@ const store = new Vuex.Store({
       state.currentCoordinates.err = coords.error;
     },
     setPlace(state, place) {
-      state.place = place
+      state.place = place;
     },
     setPetrolstations(state, apiData) {
       state.apiData.ok = apiData.ok;
@@ -45,52 +45,71 @@ const store = new Vuex.Store({
     setAPIData(state, data) {
       state.apiData.ok = data.ok;
       state.apiData.petrolStations = data.petrolStations;
-      state.apiCallError = false
+      state.apiCallError = false;
     },
     setAPICallError(state, error) {
-      state.apiCallError = error
+      state.apiCallError = error;
     },
     // Could possibly add a feature to sort in reverse as well
     SortStationsByPricePerLiter(state) {
       state.apiData.petrolStations.sort((a, b) => {
-        return a.price - b.price
-      })
+        return a.price - b.price;
+      });
     },
     SortStationsByOverallPrice(state) {
       state.apiData.petrolStations.sort((a, b) => {
-        return a.price_overall - b.price_overall
-      })
+        return a.price_overall - b.price_overall;
+      });
     },
     SortStationsByTravelTime(state) {
       state.apiData.petrolStations.sort((a, b) => {
-        return a.duration.value - b.duration.value
-      })
+        return a.duration.value - b.duration.value;
+      });
     },
     SortStationsByDistance(state) {
       state.apiData.petrolStations.sort((a, b) => {
-        return a.distance.value - b.distance.value
-      })
+        return a.distance.value - b.distance.value;
+      });
     },
     SortStationsAlphabetically(state) {
-      state.apiData.petrolStations.sort((a, b) => a.name.localeCompare(b.name)
-      )
+      state.apiData.petrolStations.sort((a, b) => a.name.localeCompare(b.name));
     },
     setDetailsID(state, data) {
-      state.detailsID = data
+      state.detailsID = data;
     },
     setDetails(state, data) {
-      state.details = data.details
-      state.apiCallError = false
-    }
+      state.details = data.details;
+      state.apiCallError = false;
+    },
   },
   getters: {
     foundCoordinates(state) {
       return state.currentCoordinates.latitude && state.currentCoordinates.longitude;
     },
     errorWithGPS: (state) => state.currentCoordinates.err,
-    coords: (state) => ({ lat: state.currentCoordinates.latitude, lng: state.currentCoordinates.longitude }),
+    coords: (state) => ({
+      lat: state.currentCoordinates.latitude,
+      lng: state.currentCoordinates.longitude,
+    }),
     apiCallError: (state) => state.apiCallError,
     getStations: (state) => state.apiData.petrolStations,
+    getStationsPositions: (state) => {
+      if (state.apiData.ok !== true) {
+        return null;
+      }
+      return state.apiData.petrolStations.map((station) => {
+        return {
+          id: station.id,
+          name: station.name,
+          price: station.price,
+          position: {
+            lat: station.lat,
+            lng: station.lng,
+          },
+          distance: station.distance
+        };
+      });
+    },
   },
   actions: {
     findPetrolStations({ commit, state }) {
@@ -98,7 +117,7 @@ const store = new Vuex.Store({
       // all data is available before sending the request
 
       // TODO: Add some error handling, in case the API returns errors
-      let url = new URL('find', state.apiURL)
+      let url = new URL('find', state.apiURL);
 
       const params = {
         lat: state.currentCoordinates.latitude,
@@ -108,26 +127,26 @@ const store = new Vuex.Store({
         tankfill: state.formData.tankfill,
         avg_city: state.formData.avgConsumptionCity,
         avg_motorway: state.formData.avgConsumptionMotorway,
-      }
+      };
 
       for (const key in params) {
-        url.searchParams.append(key, params[key])
+        url.searchParams.append(key, params[key]);
       }
 
       fetch(url)
-      .then( resp => resp.json())
-      .then( data => commit('setAPIData', data))
-      .catch( err => commit('setAPICallError', err))
+        .then((resp) => resp.json())
+        .then((data) => commit('setAPIData', data))
+        .catch((err) => commit('setAPICallError', err));
     },
-    detailsPetrolStation({ commit, state}) {
+    detailsPetrolStation({ commit, state }) {
       let url = new URL('details', state.apiURL);
-      url.searchParams.append("id", state.detailsID);
+      url.searchParams.append('id', state.detailsID);
 
       fetch(url)
-      .then(resp => resp.json())
-      .then(data => commit('setDetails', data))
-      .catch( err => commit('setAPICallError', err))
-    }
+        .then((resp) => resp.json())
+        .then((data) => commit('setDetails', data))
+        .catch((err) => commit('setAPICallError', err));
+    },
   },
   modules: {},
 });
