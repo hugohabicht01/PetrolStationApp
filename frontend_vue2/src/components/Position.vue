@@ -26,7 +26,8 @@
       style="width: 600px; height: 450px"
     >
       <!-- Middle point of Germany to center the map-->
-      <GmapMarker :position="coords" v-if="foundCoordinates" />
+      <GmapMarker :position="coords" v-if="foundCoordinates && !directionsRenderingMode" />
+      <!-- TODO: Show marker for each station and focus them in the list when clicked on -->
     </GmapMap>
   </div>
 </template>
@@ -44,6 +45,7 @@ export default {
     mapZoom: 5,
     directionsService: {},
     directionsRenderer: {},
+    directionsRenderingMode: false 
   }),
   mounted: async function () {
     let self = this;
@@ -75,6 +77,7 @@ export default {
       ).then((response) => {
         self.directionsRenderer.setDirections(response);
       });
+      self.directionsRenderingMode = true
     });
   },
   computed: {
@@ -101,6 +104,8 @@ export default {
 
           store.commit('setCurrentCoordinates', coords);
           this.zoomMapTo(coords.latitude, coords.longitude, 12);
+          this.directionsRenderingMode = false
+          this.directionsRenderer.set('directions', null)
 
           // Set place to later use for directions
           const geocoder = new this.google.maps.Geocoder();
@@ -140,6 +145,8 @@ export default {
         const lng = this.place.geometry.location.lng();
         this.setPosManually(lat, lng);
         this.zoomMapTo(lat, lng, 12);
+        this.directionsRenderingMode = false
+        this.directionsRenderer.set('directions', null)
         store.commit('setPlace', this.place)
       }
     },
