@@ -1,6 +1,6 @@
 <template>
   <div>
-    <div v-if="err.length === 0">
+    <div v-if="err.length === 0 && foundDetails">
       <h3>Details</h3>
       <div>ID: {{ details.id }}</div>
       <div>{{ details.brand }} {{ details.name }}</div>
@@ -41,8 +41,66 @@
 </template>
 
 <script>
+import { mapState } from 'vuex';
+
 export default {
-  props: { details: Object, err: String },
+  props: { stationID: String },
+  data() {
+    return {
+      details: {},
+      err: '',
+    };
+  },
+  mounted() {
+    console.log('Mounted Details.vue');
+    this.getDetails(this.stationID);
+  },
+  computed: {
+    ...mapState(['apiURL', 'place']),
+    foundDetails () {
+      return Object.keys(this.details).length !== 0
+    }
+  },
+  watch: {
+    stationID(val) {
+      this.getDetails(val);
+    },
+  },
+  methods: {
+    getDetails(id) {
+      let url = new URL('details', this.apiURL);
+      url.searchParams.append('id', id)
+
+      // TODO: Add some error validation
+      fetch(url)
+        .then((resp) => resp.json())
+        .then((data) => (this.details = data.details))
+        .then(() => this.renderDirections())
+        .catch((err) => {
+          console.log(err);
+          this.err = 'Failed to fetch details';
+        });
+    },
+    renderDirections() {
+      // This is only needed once,
+      // but the event handler destructs itself after the first time
+      // so the event will just go into the void
+      const setupDirections = new CustomEvent('setup-directions');
+
+      document.dispatchEvent(setupDirections);
+
+      // Show directions in map
+      let self = this;
+      const renderDirections = new CustomEvent('render-directions', {
+        detail: {
+          start: self.place.formatted_address,
+          end: `${self.details.place} ${self.details.street} ${self.details.houseNumber}`,
+        },
+      });
+
+      document.dispatchEvent(renderDirections);
+    },
+  },
 };
 </script>
 
