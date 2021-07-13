@@ -30,12 +30,15 @@ def find_distances_and_fuelconsumption(
         # Journey time
         petrol_stations.stations[i].duration = nav_station.duration
 
-        petrol_stations.stations[i].fuel_to_get_there, petrol_stations.stations[i].avg_speed = calculate_fuel_consumption(
+        fuel_amounts, avg_speed = calculate_fuel_consumption(
             petrol_stations.stations[i].distance.value,
             petrol_stations.stations[i].duration.value,
             avg_city_fuelconsumption,
             avg_motorway_fuelconsumption,
         )
+
+        petrol_stations.stations[i].fuel_to_get_there = fuel_amounts
+        petrol_stations.stations[i].avg_speed = avg_speed
 
         petrol_stations.stations[i].price_to_get_there = petrol_stations.stations[i].price * petrol_stations.stations[
             i].fuel_to_get_there
@@ -74,17 +77,32 @@ def get_distance_matrix(
 
     gmaps = googlemaps.Client(key=api_key)
     
-    try:
+    if len(destinations) > 25:
+        res = {"destination_addresses": [], 'rows': [{'elements': []}], 'origin_addresses': [], 'status': ''}
+        for dest in _chunks(destinations, 25):
+            gmaps_distance_matrix = gmaps.distance_matrix(
+                origins=current_coords, destinations=dest
+            )
+
+            if gmaps_distance_matrix['status'] != "OK":
+                raise RuntimeError("Google Maps API returned an error")
+            
+            # TODO: Only do once
+            res['status'] = 'OK'
+            res['origin_addresses'] = gmaps_distance_matrix['origin_addresses']
+
+            res['destination_addresses'].extend(gmaps_distance_matrix['destination_addresses'])
+            res['rows'][0]['elements'].extend(gmaps_distance_matrix['rows'][0]['elements'])
+            gmaps_distance_matrix = res
+    else:
         gmaps_distance_matrix = gmaps.distance_matrix(
             origins=current_coords, destinations=destinations
         )
-    except googlemaps.exceptions.ApiError:
-        raise models.RadiusTooBig
+
+        if gmaps_distance_matrix['status'] != "OK":
+            raise RuntimeError("Google Maps API returned an error")
 
     gmaps_distance_matrix_model = models.GMapsResponse(**gmaps_distance_matrix)
-
-    if gmaps_distance_matrix_model.status != "OK":
-        raise RuntimeError("Google Maps API returned an error")
 
     return gmaps_distance_matrix_model
 
@@ -122,3 +140,8 @@ def calculate_fuel_consumption(
     if speed >= 60:
         return (distance / 1000) * avg_motorway_fuelconsumption, speed
     return (distance / 1000) * avg_city_fuelconsumption, speed
+
+def _chunks(lst, n):
+    """Yield successive n-sized chunks from lst."""
+    for i in range(0, len(lst), n):
+        yield lst[i:i + n]
