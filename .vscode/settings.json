@@ -6,7 +6,7 @@
         },
     ],
     "vim.useSystemClipboard": true,
-    "editor.fontFamily": "FiraCode Nerd Font",
+    "editor.fontFamily": "Hack NF",
     "workbench.colorTheme": "Spotify",
     "editor.lineNumbers": "relative",
     "window.titleBarStyle": "custom",
@@ -15,5 +15,6 @@
     "python.linting.pylintEnabled": false,
     "python.linting.flake8Enabled": true,
     "python.linting.enabled": true,
-    "python.formatting.provider": "black"
+    "python.formatting.provider": "black",
+    "terminal.integrated.defaultProfile.linux": "zsh"
 }
