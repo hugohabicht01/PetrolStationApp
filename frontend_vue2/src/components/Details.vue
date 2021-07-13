@@ -52,14 +52,13 @@ export default {
     };
   },
   mounted() {
-    console.log('Mounted Details.vue');
     this.getDetails(this.stationID);
   },
   computed: {
     ...mapState(['apiURL', 'place']),
-    foundDetails () {
-      return Object.keys(this.details).length !== 0
-    }
+    foundDetails() {
+      return Object.keys(this.details).length !== 0;
+    },
   },
   watch: {
     stationID(val) {
@@ -69,7 +68,7 @@ export default {
   methods: {
     getDetails(id) {
       let url = new URL('details', this.apiURL);
-      url.searchParams.append('id', id)
+      url.searchParams.append('id', id);
 
       // TODO: Add some error validation
       fetch(url)

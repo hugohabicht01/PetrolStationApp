@@ -74,6 +74,9 @@ def get_distance_matrix(
 
     gmaps = googlemaps.Client(key=api_key)
     
+    # If the request contains more than 25 origins, or more than 25 destinations
+    # the google maps API raises a googlemaps.exceptions.ApiError with MAX_DIMENSIONS_EXCEEDED
+
     try:
         gmaps_distance_matrix = gmaps.distance_matrix(
             origins=current_coords, destinations=destinations

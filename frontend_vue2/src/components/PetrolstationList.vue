@@ -2,11 +2,11 @@
   <div>
     <h1>{{ $t('PetrolStationList.heading') }}</h1>
     <div v-if="apiCallError">{{ $t('PetrolStationList.apiCallError') }}</div>
+    <!-- TODO: Add some kind of icon that shows which column is currently sorted and in which way -->
     <table>
       <tr>
         <th @click="SortStationsAlphabetically">{{ $t('PetrolStationList.name') }}</th>
         <th @click="SortStationsByPricePerLiter">{{ $t('PetrolStationList.pricePerLiter') }}</th>
-        <!-- TODO: Add some kind of icon that shows which column is currently sorted and in which way -->
         <th @click="SortStationsByOverallPrice">{{ $t('PetrolStationList.priceOverall') }}</th>
         <th @click="SortStationsByTravelTime">{{ $t('PetrolStationList.estimatedTime') }}</th>
         <th @click="SortStationsByDistance">{{ $t('PetrolStationList.distance') }}</th>
@@ -33,8 +33,8 @@ import Details from '@/components/Details.vue';
 
 export default {
   computed: {
-    ...mapGetters(['getStations', 'coords']),
-    ...mapState(['apiCallError', 'apiURL', 'place']),
+    ...mapGetters(['getStations']),
+    ...mapState(['apiCallError']),
   },
   methods: {
     ...mapMutations([
