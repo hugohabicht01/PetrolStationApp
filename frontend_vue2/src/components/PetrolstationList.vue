@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div class="overflow-x-scroll">
     <h1>{{ $t('PetrolStationList.heading') }}</h1>
     <div v-if="apiCallError">{{ $t('PetrolStationList.apiCallError') }}</div>
     <!-- TODO: Add some kind of icon that shows which column is currently sorted and in which way -->
