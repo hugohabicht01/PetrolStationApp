@@ -1,30 +1,32 @@
 <template>
-  <div>
-    <button @click="setPosGPS">{{ $t('position.button') }}</button>
-    <div v-if="errorWithGPS">{{ $t('position.GPSError') }}</div>
-    <div>{{ $t('position.or') }}</div>
-    <div>
-      <Gmap-Autocomplete
-        :placeholder="$t('position.searchPlaceholder')"
-        @place_changed="setPlace"
-        @keyup.enter.native="usePlace"
-        :options="{ componentRestrictions: { country: 'de' } }"
-        :select-first-on-enter="true"
-        id="gmap-autocomplete"
-      >
-      </Gmap-Autocomplete>
-      <button @click="usePlace">{{ $t('position.confirm') }}</button>
+  <div class="container shadow rounded-sm bg-blue-50 flex flex-row flex-wrap">
+    <div class="p-8">
+      <button @click="setPosGPS" class="bg-blue-200 text-yellow-300 h-10">
+        {{ $t('position.button') }}
+      </button>
+      <div v-if="errorWithGPS">{{ $t('position.GPSError') }}</div>
+      <div>{{ $t('position.or') }}</div>
+      <div class="border border-gray-900 rounded-md p-1">
+        <Gmap-Autocomplete
+          :placeholder="$t('position.searchPlaceholder')"
+          @place_changed="setPlace"
+          @keyup.enter.native="usePlace"
+          :options="{ componentRestrictions: { country: 'de' } }"
+          :select-first-on-enter="true"
+        >
+        </Gmap-Autocomplete>
+        <button @click="usePlace">{{ $t('position.confirm') }}</button>
+      </div>
+      <p v-if="foundCoordinates">
+        {{ place.formatted_address }}
+      </p>
     </div>
-    <p v-if="foundCoordinates">
-      Latitude: {{ currentLatitude }}, Longitude: {{ currentLongitude }} Place:
-      {{ place.formatted_address }}
-    </p>
     <!-- Middle point of Germany to center the map-->
     <GmapMap
       :center="{ lat: 51.163361, lng: 10.447683 }"
       :zoom="mapZoom"
       ref="googlemap"
-      style="width: 600px; height: 450px"
+      class="w-screen h-96"
     >
       <GmapInfoWindow
         :options="infoOptions"
@@ -190,7 +192,7 @@ export default {
       <div>
         <b>Price: ${marker.price}</b>
         <b>Distance: ${marker.distance.text}</b>
-      </div`
+      </div`;
 
       this.infoWindowPos = marker.position;
       this.infoOptions.content = popupContent;
@@ -209,9 +211,3 @@ export default {
   },
 };
 </script>
-
-<style lang="scss" scoped>
-#gmap-autocomplete {
-  width: 35%;
-}
-</style>
