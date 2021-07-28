@@ -1,37 +1,57 @@
 <template>
-  <div>
+  <div
+    class="
+      border border-sky-300
+      rounded-md
+      m-2
+      p-4
+      overflow-x-auto
+      bg-gradient-to-br
+      from-sky-100
+      to-blue-100
+      text-left text-blue-500
+    "
+  >
     <div v-if="err.length === 0 && foundDetails">
-      <h3>Details</h3>
-      <div>ID: {{ details.id }}</div>
+      <h3 class="text-xl font-bold">Details</h3>
+      <!-- <div>ID: {{ details.id }}</div> -->
       <div>{{ details.brand }} {{ details.name }}</div>
       <div>
         {{ details.street }} {{ details.houseNumber }}, {{ details.postCode }} {{ details.place }}
       </div>
-      <div :class="{ open: details.isOpen, closed: !details.isOpen }">
-        {{ details.isOpen ? $t('Details.open') : $t('Details.closed') }}
+      <!-- TODO: Generate a google maps navigation link -->
+      <!-- <a href="">Set as navigation target</a> -->
+      <div :class="{ open: details.isOpen, closed: !details.isOpen }" class="py-4">
+        {{ $t('Details.now') }} {{ details.isOpen ? $t('Details.open') : $t('Details.closed') }}
       </div>
-      <table>
-        <tr v-if="typeof details.diesel === 'number'">
-          <td>Diesel</td>
-          <td>{{ details.diesel }}</td>
-        </tr>
-        <tr v-if="typeof details.e5 === 'number'">
-          <td>Super E5</td>
-          <td>{{ details.e5 }}</td>
-        </tr>
-        <tr v-if="typeof details.e10 === 'number'">
-          <td>Super E10</td>
-          <td>{{ details.e10 }}</td>
-        </tr>
-      </table>
-      <div v-if="details.openingTimes.length !== 0">
-        <h4>{{ $t('Details.openingTimes') }}</h4>
+      <div class="text-lg">{{ $t('Details.prices') }}:</div>
+      <div class="border border-sky-300 rounded-md w-max">
         <table>
-          <tr v-for="detail in details.openingTimes" :key="detail.text">
-            <td>{{ detail.text }}</td>
-            <td>{{ detail.start }} {{ $t('Details.until') }} {{ detail.end }}</td>
+          <tr v-if="typeof details.diesel === 'number'" class="border-b border-sky-300">
+            <td class="p-2 bg-sky-200 border-r border-sky-300">Diesel</td>
+            <td class="p-2">{{ details.diesel }}</td>
+          </tr>
+          <tr v-if="typeof details.e5 === 'number'" class="border-b border-sky-300">
+            <td class="p-2 bg-sky-200 border-r border-sky-300">Super E5</td>
+            <td class="p-2">{{ details.e5 }}</td>
+          </tr>
+          <tr v-if="typeof details.e10 === 'number'">
+            <td class="p-2 bg-sky-200 border-r border-sky-300">Super E10</td>
+            <td class="p-2">{{ details.e10 }}</td>
           </tr>
         </table>
+      </div>
+      <div v-if="details.openingTimes.length !== 0">
+        <h4 class="text-lg">{{ $t('Details.openingTimes') }}:</h4>
+        <div class="border border-sky-300 rounded-md w-max">
+          <table>
+            <col class="bg-sky-200" />
+            <tr v-for="detail in details.openingTimes" :key="detail.text" class="even:border-b border-sky-300">
+              <td class="p-2 border-sky-300 border-r ">{{ detail.text }}</td>
+              <td class="p-2">{{ detail.start }} {{ $t('Details.until') }} {{ detail.end }}</td>
+            </tr>
+          </table>
+        </div>
       </div>
     </div>
     <div v-if="err.length !== 0">
@@ -75,6 +95,7 @@ export default {
         .then((resp) => resp.json())
         .then((data) => (this.details = data.details))
         .then(() => this.renderDirections())
+        .then(() => this.err = '')
         .catch((err) => {
           console.log(err);
           this.err = 'Failed to fetch details';

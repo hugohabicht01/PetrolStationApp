@@ -1,21 +1,25 @@
 <template>
-  <div class="container shadow rounded-sm bg-blue-50 flex flex-row flex-wrap">
-    <div class="p-8">
-      <button @click="setPosGPS" class="bg-blue-200 text-yellow-300 h-10">
+  <div class="container mx-auto rounded-sm flex flex-row flex-wrap justify-center">
+    <div class="p-8 flex flex-col items-center">
+      <button @click="setPosGPS" class="btn btn-primary self-center">
         {{ $t('position.button') }}
       </button>
       <div v-if="errorWithGPS">{{ $t('position.GPSError') }}</div>
       <div>{{ $t('position.or') }}</div>
-      <div class="border border-gray-900 rounded-md p-1">
+      <!-- <div class="border border-gray-900 rounded-md p-1 flex flex-row"> -->
+      <div class="bg-gradient-to-tl from-sky-300 to-blue-300 shadow-sm rounded-md p-2 flex flex-row">
         <Gmap-Autocomplete
           :placeholder="$t('position.searchPlaceholder')"
           @place_changed="setPlace"
           @keyup.enter.native="usePlace"
           :options="{ componentRestrictions: { country: 'de' } }"
           :select-first-on-enter="true"
+          class="p-1 mr-2 w-9/12 rounded-md"
         >
         </Gmap-Autocomplete>
-        <button @click="usePlace">{{ $t('position.confirm') }}</button>
+        <button @click="usePlace" class="btn btn-primary w-3/12 min-w-min">
+          {{ $t('position.confirm') }}
+        </button>
       </div>
       <p v-if="foundCoordinates">
         {{ place.formatted_address }}

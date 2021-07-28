@@ -24,7 +24,7 @@ const store = new Vuex.Store({
       avgConsumptionCity: 12.0,
       avgConsumptionMotorway: 7.2,
     },
-    apiURL: 'https://hugohabicht01-petrolstationapp-qg7gpjqrhgpp-8000.githubpreview.dev',
+    apiURL: 'http://localhost:8000',
   },
   mutations: {
     setCurrentCoordinates(state, coords) {
@@ -84,7 +84,7 @@ const store = new Vuex.Store({
   },
   getters: {
     foundCoordinates(state) {
-      return state.currentCoordinates.latitude && state.currentCoordinates.longitude;
+      return state.currentCoordinates.latitude !== undefined && state.currentCoordinates.longitude !== undefined;
     },
     errorWithGPS: (state) => state.currentCoordinates.err,
     coords: (state) => ({
