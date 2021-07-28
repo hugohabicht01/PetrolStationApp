@@ -33,7 +33,9 @@
     "openingTimes": "Öffnungszeiten",
     "until": "bis",
     "directions": "Routenplanung",
-    "open": "Jetzt offen",
-    "closed": "Geschlossen"
+    "now": "Gerade",
+    "open": "geöffnet",
+    "closed": "geschlossen",
+    "prices": "Preise"
   }
 }

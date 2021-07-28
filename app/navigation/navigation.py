@@ -1,24 +1,26 @@
 import googlemaps
-from typing import List
+from typing import List, Tuple
 from app.models import models
 import operator
 
 
 def find_distances_and_fuelconsumption(
-        current_pos: models.Coordinate,
-        petrol_stations: models.PetrolStations,
-        tankfill: float,
-        avg_city_fuelconsumption: float,
-        avg_motorway_fuelconsumption: float,
-        api_key: str,
+    current_pos: models.Coordinate,
+    petrol_stations: models.PetrolStations,
+    tankfill: float,
+    avg_city_fuelconsumption: float,
+    avg_motorway_fuelconsumption: float,
+    api_key: str,
 ):
     # TODO: This whole function is extremly ugly and bad code.
     # Just add some classes and do all the stations
-    # object oriented, will be way cleaner than this mess 
+    # object oriented, will be way cleaner than this mess
 
     stations_coords = []
     for station in petrol_stations.stations:
-        stations_coords.append(models.Coordinate(latitude=station.lat, longitude=station.lng))
+        stations_coords.append(
+            models.Coordinate(latitude=station.lat, longitude=station.lng)
+        )
 
     distances: models.GMapsResponse = get_distance_matrix(
         current_pos, stations_coords, api_key
@@ -40,21 +42,27 @@ def find_distances_and_fuelconsumption(
         petrol_stations.stations[i].fuel_to_get_there = fuel_amounts
         petrol_stations.stations[i].avg_speed = avg_speed
 
-        petrol_stations.stations[i].price_to_get_there = petrol_stations.stations[i].price * petrol_stations.stations[
-            i].fuel_to_get_there
+        petrol_stations.stations[i].price_to_get_there = (
+            petrol_stations.stations[i].price
+            * petrol_stations.stations[i].fuel_to_get_there
+        )
         # Calculate how much you would spend in case you would fill your tank at that station
-        petrol_stations.stations[i].price_overall = petrol_stations.stations[i].price_to_get_there + \
-                                                    petrol_stations.stations[i].price * tankfill
+        petrol_stations.stations[i].price_overall = (
+            petrol_stations.stations[i].price_to_get_there
+            + petrol_stations.stations[i].price * tankfill
+        )
 
-    petrol_stations_sorted = sorted(petrol_stations.stations, key=operator.attrgetter('price_overall'))
+    petrol_stations_sorted = sorted(
+        petrol_stations.stations, key=operator.attrgetter("price_overall")
+    )
 
     return petrol_stations_sorted
 
 
 def get_distance_matrix(
-        current_pos: models.Coordinate,
-        destinations: List[models.Coordinate],
-        api_key: str,
+    current_pos: models.Coordinate,
+    destinations: List[models.Coordinate],
+    api_key: str,
 ) -> models.GMapsResponse:
     """
     Gets the distance matrix from the Google Maps distance matrix API
@@ -76,30 +84,39 @@ def get_distance_matrix(
     destinations = [f"{coord.latitude}, {coord.longitude}" for coord in destinations]
 
     gmaps = googlemaps.Client(key=api_key)
-    
+
     if len(destinations) > 25:
-        res = {"destination_addresses": [], 'rows': [{'elements': []}], 'origin_addresses': [], 'status': ''}
+        res = {
+            "destination_addresses": [],
+            "rows": [{"elements": []}],
+            "origin_addresses": [],
+            "status": "",
+        }
         for dest in _chunks(destinations, 25):
             gmaps_distance_matrix = gmaps.distance_matrix(
                 origins=current_coords, destinations=dest
             )
 
-            if gmaps_distance_matrix['status'] != "OK":
+            if gmaps_distance_matrix["status"] != "OK":
                 raise RuntimeError("Google Maps API returned an error")
-            
-            # TODO: Only do once
-            res['status'] = 'OK'
-            res['origin_addresses'] = gmaps_distance_matrix['origin_addresses']
 
-            res['destination_addresses'].extend(gmaps_distance_matrix['destination_addresses'])
-            res['rows'][0]['elements'].extend(gmaps_distance_matrix['rows'][0]['elements'])
+            # TODO: Only do once
+            res["status"] = "OK"
+            res["origin_addresses"] = gmaps_distance_matrix["origin_addresses"]
+
+            res["destination_addresses"].extend(
+                gmaps_distance_matrix["destination_addresses"]
+            )
+            res["rows"][0]["elements"].extend(
+                gmaps_distance_matrix["rows"][0]["elements"]
+            )
             gmaps_distance_matrix = res
     else:
         gmaps_distance_matrix = gmaps.distance_matrix(
             origins=current_coords, destinations=destinations
         )
 
-        if gmaps_distance_matrix['status'] != "OK":
+        if gmaps_distance_matrix["status"] != "OK":
             raise RuntimeError("Google Maps API returned an error")
 
     gmaps_distance_matrix_model = models.GMapsResponse(**gmaps_distance_matrix)
@@ -108,11 +125,11 @@ def get_distance_matrix(
 
 
 def calculate_fuel_consumption(
-        distance: int,
-        duration: int,
-        avg_city_fuelconsumption: float,
-        avg_motorway_fuelconsumption: float,
-) -> (float, float):
+    distance: int,
+    duration: int,
+    avg_city_fuelconsumption: float,
+    avg_motorway_fuelconsumption: float,
+) -> Tuple[float, float]:
     """
     Estimates the fuel consumption of your car
 
@@ -141,7 +158,8 @@ def calculate_fuel_consumption(
         return (distance / 1000) * avg_motorway_fuelconsumption, speed
     return (distance / 1000) * avg_city_fuelconsumption, speed
 
+
 def _chunks(lst, n):
     """Yield successive n-sized chunks from lst."""
     for i in range(0, len(lst), n):
-        yield lst[i:i + n]
+        yield lst[i : i + n]

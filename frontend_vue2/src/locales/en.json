@@ -33,7 +33,9 @@
     "openingTimes": "Opening times",
     "until": "until",
     "directions": "Directions",
-    "open": "Open",
-    "closed": "Closed"
+    "now": "Now",
+    "open": "open",
+    "closed": "closed",
+    "prices": "Prices"
   }
 }
