@@ -1,6 +1,6 @@
 <template>
-  <div id="app">
-    <h1>{{ $t('title')}}</h1>
+  <div id="app" class="bg-gradient-to-l from-sky-100 to-blue-100 text-gray-900">
+    <h1 class="text-xl bg-gradient-to-r from-sky-200 to-blue-200 px-4 py-5">{{ $t('title') }}</h1>
     <Position />
     <SearchForm />
     <PetrolstationList />
@@ -21,14 +21,3 @@ export default {
   },
 };
 </script>
-
-<style lang="scss">
-#app {
-  font-family: Avenir, Helvetica, Arial, sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  text-align: center;
-  color: #2c3e50;
-  margin-top: 60px;
-}
-</style>

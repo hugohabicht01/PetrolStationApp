@@ -27,7 +27,6 @@ TANKERKOENIG_API_KEY = getenv("TANKERKOENIG_API_KEY")
 
 @app.get("/version")
 async def version():
-    print("Hit route /version")
     return {"version": "0.1", "status":"working but not everything is implemented yet"}
 
 @app.get("/details")
@@ -39,7 +38,10 @@ def details_petrol_station(id: str):
     try:
         return {"ok": True, "details": prices.get_station_details(id, TANKERKOENIG_API_KEY)}
     except models.PricingAPIError:
-        return {"ok": False, "details": "Bad request"}
+        raise HTTPException(
+            status_code=400,
+            detail="Bad request"
+        )
 
 
 @app.get("/find")
@@ -63,7 +65,6 @@ def find_petrol_stations(
             detail="No stations in this area, try increasing the radius",
         )
 
-    # TODO: Refractor this and implement some kind of pagination to allow for higher search radii
     try:
         petrol_stations_nearby = navigation.find_distances_and_fuelconsumption(
             current_pos,

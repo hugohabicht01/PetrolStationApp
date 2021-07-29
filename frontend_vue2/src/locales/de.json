@@ -5,7 +5,8 @@
     "button": "Deinen Standort finden",
     "GPSError": "Dein Standort konnte leider nicht festgestellt werden, bitte gib deine aktuelle Addresse in die Suchbox ein",
     "or": "oder",
-    "searchPlaceholder": "Adresse eingeben..."
+    "searchPlaceholder": "Adresse eingeben...",
+    "confirm": "Bestätigen"
   },
   "SearchForm": {
     "heading": "Tankstellen in der Umgebung finden",
@@ -27,5 +28,14 @@
     "priceOverall": "Preis insgesamt",
     "estimatedTime": "Voraussichtliche Fahrtdauer",
     "distance": "Distanz"
+  },
+  "Details": {
+    "openingTimes": "Öffnungszeiten",
+    "until": "bis",
+    "directions": "Routenplanung",
+    "now": "Gerade",
+    "open": "geöffnet",
+    "closed": "geschlossen",
+    "prices": "Preise"
   }
 }

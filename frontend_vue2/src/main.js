@@ -3,6 +3,7 @@ import * as VueGoogleMaps from 'gmap-vue';
 import App from './App.vue';
 import store from './store';
 import i18n from './i18n'
+import './assets/tailwind.css'
 
 Vue.config.productionTip = false;
 Vue.use(VueGoogleMaps, {
@@ -18,7 +19,7 @@ Vue.use(VueGoogleMaps, {
   /// / (e.g. `this.$refs.gmap.$on('zoom_changed', someFunc)`)
   /// / instead of going through Vue templates (e.g. `<GmapMap @zoom_changed="someFunc">`)
   /// / you might need to turn this on.
-  // autobindAllEvents: false,
+  autobindAllEvents: true,
 
   /// / If you want to manually install components, e.g.
   /// / import {GmapMarker} from 'gmap-vue/src/components/marker'
