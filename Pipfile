@@ -11,6 +11,7 @@ uvicorn = "*"
 pydantic = "*"
 responses = "*"
 flake8 = "*"
+aiofiles = "*"
 
 [requires]
 python_version = "3.9"

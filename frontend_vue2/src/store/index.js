@@ -24,7 +24,7 @@ const store = new Vuex.Store({
       avgConsumptionCity: 12.0,
       avgConsumptionMotorway: 7.2,
     },
-    apiURL: 'http://localhost:8000',
+    apiURL: 'http://34.68.127.57',
   },
   mutations: {
     setCurrentCoordinates(state, coords) {
