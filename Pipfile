@@ -11,14 +11,14 @@ uvicorn = "*"
 pydantic = "*"
 responses = "*"
 flake8 = "*"
-aiofiles = "*"
+gunicorn = "*"
 
 [requires]
 python_version = "3.9"
 
 [scripts]
 dev = "uvicorn app.main:app --reload"
-serve = "uvicorn app.main:app --host 0.0.0.0 --port 80"
+serve = "gunicorn --bind :8080 --workers 2 --worker-class uvicorn.workers.UvicornWorker  --threads 8 app.main:app"
 test = "python3 -m unittest discover -v app/tests"
 
 [dev-packages]

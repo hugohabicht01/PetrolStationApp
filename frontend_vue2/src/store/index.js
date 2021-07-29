@@ -24,7 +24,7 @@ const store = new Vuex.Store({
       avgConsumptionCity: 12.0,
       avgConsumptionMotorway: 7.2,
     },
-    apiURL: 'http://34.68.127.57',
+    apiURL: 'https://imposing-water-291212.ew.r.appspot.com',
   },
   mutations: {
     setCurrentCoordinates(state, coords) {

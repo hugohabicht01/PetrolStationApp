@@ -1,7 +1,7 @@
 {
     "_meta": {
         "hash": {
-            "sha256": "8064962ed3ffc000b23629e43e65263c3e9acee3d65af28abc0c685f589c0f98"
+            "sha256": "4e8a44a68eb12e9c67036938226d014cb47a4a10dc5676fd0ac7eff0014da4a2"
         },
         "pipfile-spec": 6,
         "requires": {
@@ -16,14 +16,6 @@
         ]
     },
     "default": {
-        "aiofiles": {
-            "hashes": [
-                "sha256:a1c4fc9b2ff81568c83e21392a82f344ea9d23da906e4f6a52662764545e19d4",
-                "sha256:c67a6823b5f23fcab0a2595a289cec7d8c863ffcb4322fb8cd6b90400aedfdbc"
-            ],
-            "index": "pypi",
-            "version": "==0.7.0"
-        },
         "asgiref": {
             "hashes": [
                 "sha256:4ef1ab46b484e3c706329cedeff284a5d40824200638503f5768edb6de7d58e9",
@@ -77,6 +69,14 @@
             ],
             "index": "pypi",
             "version": "==4.5.3"
+        },
+        "gunicorn": {
+            "hashes": [
+                "sha256:9dcc4547dbb1cb284accfb15ab5667a0e5d1881cc443e0677b4882a4067a807e",
+                "sha256:e0a968b5ba15f8a328fdfd7ab1fcb5af4470c28aaf7e55df02a99bc13138e6e8"
+            ],
+            "index": "pypi",
+            "version": "==20.1.0"
         },
         "h11": {
             "hashes": [
