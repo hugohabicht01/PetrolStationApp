@@ -34,6 +34,7 @@ def details_petrol_station(id: str):
     # TODO: Add proper errorhandling, this is very hacky...
     # Some more verbosity would also be nice so that the response makes clear if the error occured 
     # on the server side or if its just a bad request
+    # TODO: Return a model instead of a dict
 
     try:
         return {"ok": True, "details": prices.get_station_details(id, TANKERKOENIG_API_KEY)}
@@ -83,6 +84,8 @@ def find_petrol_stations(
             status_code=400,
             detail="Error finding navigation details, please search with changed parameters",
         )
+
+    # TODO: Return a model instead of a dict
     return {"ok": True, "petrolStations": petrol_stations_nearby}
 
 
