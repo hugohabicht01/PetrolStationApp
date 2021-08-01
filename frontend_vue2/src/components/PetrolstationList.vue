@@ -23,6 +23,7 @@
             {{ $t('PetrolStationList.distance') }}
           </th>
         </tr>
+        <!-- TODO: Highlight the currently selected station -->
         <tr
           v-for="station in getStations"
           :key="station.id"
