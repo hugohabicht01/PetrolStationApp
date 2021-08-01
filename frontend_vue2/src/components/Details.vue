@@ -10,6 +10,7 @@
       from-sky-100
       to-blue-100
       text-left text-blue-500
+      md:max-w-max
     "
   >
     <div v-if="err.length === 0 && foundDetails">
