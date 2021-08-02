@@ -1,6 +1,5 @@
 <template>
   <div id="app" class="bg-gradient-to-l from-sky-100 to-blue-100 text-gray-900 min-h-screen">
-    <!-- <h1 class="text-xl bg-gradient-to-r from-sky-200 to-blue-200 px-4 py-5">{{ $t('title') }}</h1> -->
     <Header />
     <Position />
     <SearchForm />

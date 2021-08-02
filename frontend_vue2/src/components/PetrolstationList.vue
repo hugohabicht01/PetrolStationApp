@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div v-if="getStations.length" class="lg:flex lg:flex-row lg:items-start">
     <!-- TODO: When no data has been loaded yet, hide Componenent -->
     <!-- <h1>{{ $t('PetrolStationList.heading') }}</h1> -->
     <div v-if="apiCallError">{{ $t('PetrolStationList.apiCallError') }}</div>
@@ -27,7 +27,7 @@
         <tr
           v-for="station in getStations"
           :key="station.id"
-          @click="stationID = station.id"
+          @click="setStationID(station.id)"
           class="text-left border-t border-sky-300"
         >
           <td class="p-2 border-t border-sky-300">{{ station.name }}</td>
@@ -40,11 +40,7 @@
         </tr>
       </table>
     </div>
-    <!-- 
-    TODO: Instead of fetching details about each station on demand,
-    just fetch details of all stations in advance to avoid loading delays 
-    -->
-    <Details :stationID="stationID" v-if="stationID.length !== 0"></Details>
+    <Details :stationID="stationID" v-if="stationID.length !== 0" ref="details"></Details>
   </div>
 </template>
 
@@ -65,6 +61,12 @@ export default {
       'SortStationsByDistance',
       'SortStationsAlphabetically',
     ]),
+    // TODO: Maybe move this into the Details component
+    setStationID(id) {
+      this.stationID = id;
+      // Wait for the Details component to render
+      setTimeout(this.$refs.details.$el.scrollIntoView({behavior: "smooth", block: "center"}), 500);
+    }
   },
   data: () => ({
     stationID: '',
