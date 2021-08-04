@@ -35,10 +35,6 @@ const store = new Vuex.Store({
     setPlace(state, place) {
       state.place = place;
     },
-    setPetrolstations(state, apiData) {
-      state.apiData.ok = apiData.ok;
-      state.apiData.petrolStations = apiData.petrolStations;
-    },
     setFormData(state, data) {
       state.formData = { ...data };
     },
