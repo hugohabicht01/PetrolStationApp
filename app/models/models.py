@@ -1,5 +1,5 @@
 import uuid
-from pydantic import BaseModel, Field, ValidationError, validator
+from pydantic import BaseModel, validator
 from typing import List, Union
 
 
@@ -71,36 +71,41 @@ class PetrolStation(BaseModel):
     houseNumber: str = None
     postCode: int = None
 
-    fuel_to_get_there: float = None
-    price_to_get_there: float = None
     price_overall: float = None
-    avg_speed: float = None
     distance: Distance = None
     duration: Duration = None
+
+
+class Find_Result(BaseModel):
+    ok: bool
+    petrolStations: List[PetrolStation]
+
 
 class OpeningTimes(BaseModel):
     text: str
     start: str
     end: str
 
+
 class Details(BaseModel):
-        id: str
-        name: str
-        brand: str
-        street: str
-        houseNumber: str
-        postCode: str
-        place: str
-        openingTimes: List[OpeningTimes]
-        overrides: List[str]
-        wholeDay: bool
-        isOpen: bool
-        e5: float = None
-        e10: float = None
-        diesel: float = None
-        lat: float
-        lng: float
-        state: Union[str, None]
+    id: str
+    name: str
+    brand: str
+    street: str
+    houseNumber: str
+    postCode: str
+    place: str
+    openingTimes: List[OpeningTimes]
+    overrides: List[str]
+    wholeDay: bool
+    isOpen: bool
+    e5: float = None
+    e10: float = None
+    diesel: float = None
+    lat: float
+    lng: float
+    state: Union[str, None]
+
 
 class PetrolStations(BaseModel):
     ok: bool
@@ -114,11 +119,14 @@ class PetrolStations(BaseModel):
 class RadiusTooBig(Exception):
     pass
 
+
 class NoStationsFound(Exception):
     pass
 
+
 class PricingAPIError(Exception):
     pass
+
 
 class GoogleMapsError(Exception):
     pass
