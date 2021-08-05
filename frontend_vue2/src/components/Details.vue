@@ -114,7 +114,8 @@ export default {
       let self = this;
       const renderDirections = new CustomEvent('render-directions', {
         detail: {
-          start: self.place.formatted_address,
+          // start: self.place.formatted_address,
+          start: self.place.place_id,
           end: `${self.details.place} ${self.details.street} ${self.details.houseNumber}`,
         },
       });

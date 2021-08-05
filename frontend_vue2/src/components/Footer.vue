@@ -1,5 +1,5 @@
 <template>
-  <div class="bg-gradient-to-tr from-sky-200 to-blue-200 p-8 mt-10 overflow-x-scroll">
+  <div class="bg-gradient-to-tr from-sky-200 to-blue-200 p-8 mt-10 overflow-x-auto">
     <footer>Data - CC BY 4.0 - https://creativecommons.tankerkoenig.de</footer>
   </div>
 </template>

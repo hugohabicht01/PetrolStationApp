@@ -96,7 +96,8 @@ export default {
     document.addEventListener('render-directions', (e) => {
       const options = {
         origin: {
-          query: e.detail.start,
+          // query: e.detail.start,
+          placeId: e.detail.start,
         },
         destination: {
           query: e.detail.end,
@@ -192,6 +193,7 @@ export default {
       // TODO: Maybe get some images via google maps places API
       // or atleast provide localization
       // TODO: When opening a marker, show details with Details.vue
+      // In order to do this, everything needs to be migrated to use vuex instead of component data
       const popupContent = `<h3>${marker.name}</h3>
       <div>
         <b>Price: ${marker.price}</b>
