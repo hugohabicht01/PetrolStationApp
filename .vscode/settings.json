@@ -6,7 +6,7 @@
         },
     ],
     "vim.useSystemClipboard": true,
-    "editor.fontFamily": "Hack NF",
+    "editor.fontFamily": "Hack Nerd Font",
     "workbench.colorTheme": "Spotify",
     "editor.lineNumbers": "relative",
     "window.titleBarStyle": "custom",

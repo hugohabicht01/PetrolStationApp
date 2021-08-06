@@ -15,6 +15,13 @@ const store = new Vuex.Store({
       ok: undefined,
       petrolStations: [],
     },
+    sorting: {
+      price: 'UNSORTED',
+      price_overall: 'ASCENDING',
+      duration: 'UNSORTED',
+      distance: 'UNSORTED',
+      name: 'UNSORTED'
+    },
     apiCallError: false,
     formData: {
       petroltype: '',
@@ -35,10 +42,6 @@ const store = new Vuex.Store({
     setPlace(state, place) {
       state.place = place;
     },
-    setPetrolstations(state, apiData) {
-      state.apiData.ok = apiData.ok;
-      state.apiData.petrolStations = apiData.petrolStations;
-    },
     setFormData(state, data) {
       state.formData = { ...data };
     },
@@ -50,29 +53,77 @@ const store = new Vuex.Store({
     setAPICallError(state, error) {
       state.apiCallError = error;
     },
-    // Could possibly add a feature to sort in reverse as well
     SortStationsByPricePerLiter(state) {
-      state.apiData.petrolStations.sort((a, b) => {
-        return a.price - b.price;
-      });
+      if (state.sorting.price == 'ASCENDING' || state.sorting.price == 'UNSORTED') {
+        state.apiData.petrolStations.sort((a, b) => {
+          return a.price - b.price;
+        })
+        Object.keys(state.sorting).forEach((key) => state.sorting[key] = 'UNSORTED')
+        state.sorting.price = 'DESCENDING'
+      } else {
+        state.apiData.petrolStations.sort((a, b) => {
+          return b.price - a.price;
+        });
+        Object.keys(state.sorting).forEach((key) => state.sorting[key] = 'UNSORTED')
+        state.sorting.price = 'ASCENDING'
+      }
     },
     SortStationsByOverallPrice(state) {
-      state.apiData.petrolStations.sort((a, b) => {
-        return a.price_overall - b.price_overall;
-      });
+      if (state.sorting.price_overall == 'ASCENDING' || state.sorting.price_overall == 'UNSORTED') {
+        state.apiData.petrolStations.sort((a, b) => {
+          return a.price_overall - b.price_overall;
+        })
+        Object.keys(state.sorting).forEach((key) => state.sorting[key] = 'UNSORTED')
+        state.sorting.price_overall = 'DESCENDING'
+      } else {
+        state.apiData.petrolStations.sort((a, b) => {
+          return b.price_overall - a.price_overall;
+        });
+        Object.keys(state.sorting).forEach((key) => state.sorting[key] = 'UNSORTED')
+        state.sorting.price_overall = 'ASCENDING'
+      }
     },
     SortStationsByTravelTime(state) {
-      state.apiData.petrolStations.sort((a, b) => {
-        return a.duration.value - b.duration.value;
-      });
+      if (state.sorting.duration == 'ASCENDING' || state.sorting.duration == 'UNSORTED') {
+        state.apiData.petrolStations.sort((a, b) => {
+          return a.duration.value - b.duration.value;
+        })
+        Object.keys(state.sorting).forEach((key) => state.sorting[key] = 'UNSORTED')
+        state.sorting.duration = 'DESCENDING'
+      } else {
+        state.apiData.petrolStations.sort((a, b) => {
+          return b.duration.value - a.duration.value;
+        });
+        Object.keys(state.sorting).forEach((key) => state.sorting[key] = 'UNSORTED')
+        state.sorting.duration = 'ASCENDING'
+      }
     },
     SortStationsByDistance(state) {
-      state.apiData.petrolStations.sort((a, b) => {
-        return a.distance.value - b.distance.value;
-      });
+      if (state.sorting.distance == 'ASCENDING' || state.sorting.distance == 'UNSORTED') {
+        state.apiData.petrolStations.sort((a, b) => {
+          return a.distance.value - b.distance.value;
+        })
+        Object.keys(state.sorting).forEach((key) => state.sorting[key] = 'UNSORTED')
+        state.sorting.distance = 'DESCENDING'
+      } else {
+        state.apiData.petrolStations.sort((a, b) => {
+          return b.distance.value - a.distance.value;
+        });
+        Object.keys(state.sorting).forEach((key) => state.sorting[key] = 'UNSORTED')
+        state.sorting.distance = 'ASCENDING'
+      }
     },
     SortStationsAlphabetically(state) {
-      state.apiData.petrolStations.sort((a, b) => a.name.localeCompare(b.name));
+      // state.apiData.petrolStations.sort((a, b) => a.name.localeCompare(b.name));
+      if (state.sorting.name == 'ASCENDING' || state.sorting.name == 'UNSORTED') {
+        state.apiData.petrolStations.sort((a, b) => a.name.localeCompare(b.name));
+        Object.keys(state.sorting).forEach((key) => state.sorting[key] = 'UNSORTED')
+        state.sorting.name = 'DESCENDING'
+      } else {
+        state.apiData.petrolStations.sort((a, b) => b.name.localeCompare(a.name));
+        Object.keys(state.sorting).forEach((key) => state.sorting[key] = 'UNSORTED')
+        state.sorting.name = 'ASCENDING'
+      }
     },
     setDetailsID(state, data) {
       state.detailsID = data;
