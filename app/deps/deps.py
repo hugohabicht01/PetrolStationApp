@@ -18,5 +18,4 @@ def parseFuelType(fueltype: str) -> Petrol:
     if fueltype == "all":
         # TODO: Make it possible to get prices for all petrol types and not just one
         raise HTTPException(status_code=501, detail="Coming soon")
-    else:
-        raise HTTPException(status_code=400, detail="Bad fueltype")
+    raise HTTPException(status_code=400, detail="Bad fueltype")
