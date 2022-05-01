@@ -1,11 +1,14 @@
-from fastapi import FastAPI, HTTPException
-from fastapi.middleware.cors import CORSMiddleware
+from os import getenv
 from typing import List
+
+import googlemaps
 import tankerkoenig
+from fastapi import Depends, FastAPI, HTTPException
+from fastapi.middleware.cors import CORSMiddleware
+
+from app.deps import deps
 from app.models import models
 from app.navigation import navigation
-from os import getenv
-
 
 app = FastAPI()
 print("fastapi started")
@@ -35,14 +38,8 @@ async def version():
     return {"version": "0.1", "status": "working but not everything is implemented yet"}
 
 
-@app.get("/details")
+@app.get("/details", response_model=tankerkoenig.models.Details_Station)
 def details_petrol_station(id: str):
-    # TODO: Add proper errorhandling, this is very hacky...
-    # Some more verbosity would also be nice so that the response makes clear
-    # if the error occured
-    # on the server side or if its just a bad request
-    # TODO: Return a model instead of a dict
-
     try:
         return {
             "ok": True,
@@ -55,43 +52,28 @@ def details_petrol_station(id: str):
         raise HTTPException(status_code=400, detail=e)
 
 
-@app.get("/find")
+@app.get("/find", response_model=models.Find_Result)
 def find_petrol_stations(
-    lat: str,
-    lng: str,
-    fueltype: str,
     rad: float,
     tankfill: int,
     avg_city: float = 12,
     avg_motorway: float = 7.2,
+    current_pos: models.Coordinate = Depends(deps.getCoords),
+    petrol_type: tankerkoenig.Petrol = Depends(deps.parseFuelType),
 ) -> models.Find_Result:
-
-    # TODO: Make this a function and inject this instead
-    current_pos: models.Coordinate = models.Coordinate(latitude=lat, longitude=lng)
-
-    # TODO: Make this a function and inject this instead
-    if fueltype == "diesel":
-        petrol_type = tankerkoenig.Petrol.DIESEL
-    elif fueltype == "e5":
-        petrol_type = tankerkoenig.Petrol.E5
-    elif fueltype == "e10":
-        petrol_type = tankerkoenig.Petrol.E10
-    elif fueltype == "all":
-        # TODO: Make it possible to get prices for all petrol types and not just one
-        raise HTTPException(status_code=501, detail="Coming soon")
-        # petrol_type = tankerkoenig.Petrol.ALL
-    else:
-        raise HTTPException(status_code=400, detail="Bad fueltype")
 
     try:
         # TODO: In the tankerkoenig lib, make it possible to get the raw json and not the model
         petrol_stations = pricingClient.list(
-            lat=lat,
-            lng=lng,
+            lat=current_pos.latitude,
+            lng=current_pos.longitude,
             rad=rad,
             petrol_type=petrol_type,
             sort=tankerkoenig.SortingMethod.PRICE,
         )
+
+        if len(petrol_stations.stations) == 0:
+            return petrol_stations
     except (
         tankerkoenig.exceptions.bad_latitude,
         tankerkoenig.exceptions.bad_longitude,
@@ -116,7 +98,7 @@ def find_petrol_stations(
     # TODO: Figure out when this exception gets triggered
     # Just noticed that it didn't exist in the models, that's why I'm kind of confused...
     # Added it to prevent errors but knowing the origin would be handy
-    except models.GoogleMapsError as e:
+    except googlemaps.exceptions.ApiError as e:
         print(e)
         raise HTTPException(
             status_code=400,

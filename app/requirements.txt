@@ -1,6 +1,0 @@
-requests
-googlemaps
-python-dotenv
-fastapi
-pydantic
-responses

@@ -1,6 +1,8 @@
-import googlemaps
 from typing import List
+
+import googlemaps
 from tankerkoenig.models import List_PetrolStations
+
 from app.models import models
 
 
@@ -21,10 +23,36 @@ def find_distances_and_fuelconsumption(
     distances = get_distance_matrix(current_pos, stations_coords, api_key)
     stations = petrol_stations.dict()["stations"]
 
+    return merge_pricing_navigation(
+        distances=distances,
+        stations=stations,
+        avg_city=avg_city_fuelconsumption,
+        avg_motorway=avg_motorway_fuelconsumption,
+        tankfill=tankfill,
+    )
+
+
+def merge_pricing_navigation(*, distances, stations, avg_city, avg_motorway, tankfill):
+    """
+    Merge the data returned by the pricing API
+    and the Gmaps directions matrix
+    into one data structure
+    and calculates how much the fuel
+    would be used driving to the station
+
+    Args:
+        distances: Distances returned by Directions Matrix API
+        stations: List of stations returned by Tankerkoenig API
+        avg_city: Average fuel consumption in city traffic
+        avg_motorway: Average fuel consumption on motorway
+        tankfill: How many liters should get filled up
+
+    Returns:
+        Pricing and navigation data merged
+
+    """
     stations_with_distances = []
 
-    # TODO: Move into its own function
-    # Merge distances and stations
     for i in range(len(distances)):
         # remove unnecessary status key
         distances[i].pop("status")
@@ -33,8 +61,8 @@ def find_distances_and_fuelconsumption(
         fuel_amounts = calculate_fuel_consumption(
             distances[i]["distance"]["value"],
             distances[i]["duration"]["value"],
-            avg_city_fuelconsumption,
-            avg_motorway_fuelconsumption,
+            avg_city,
+            avg_motorway,
         )
 
         price_per_liter = station["price"]
@@ -99,10 +127,7 @@ def get_distance_matrix(
         # TODO: Most of this (origin_addresses, status, destination_addresses)
         # is not needed, the code should be removed
         res = {
-            "destination_addresses": [],
             "rows": [{"elements": []}],
-            "origin_addresses": [],
-            "status": "",
         }
         for dest in _chunks(destinations, 25):
             gmaps_distance_matrix = gmaps.distance_matrix(
@@ -112,18 +137,12 @@ def get_distance_matrix(
             if gmaps_distance_matrix["status"] != "OK":
                 raise RuntimeError("Google Maps API returned an error")
 
-            # TODO: Only do once
-            res["status"] = "OK"
-            res["origin_addresses"] = gmaps_distance_matrix["origin_addresses"]
-
-            res["destination_addresses"].extend(
-                gmaps_distance_matrix["destination_addresses"]
-            )
             res["rows"][0]["elements"].extend(
                 gmaps_distance_matrix["rows"][0]["elements"]
             )
             gmaps_distance_matrix = res
     else:
+        print(f"origins: {current_coords}, destinations: {destinations}")
         gmaps_distance_matrix = gmaps.distance_matrix(
             origins=current_coords, destinations=destinations
         )
@@ -171,4 +190,4 @@ def calculate_fuel_consumption(
 def _chunks(lst, n):
     """Yield successive n-sized chunks from lst."""
     for i in range(0, len(lst), n):
-        yield lst[i : i + n]
+        yield lst[i: i + n]

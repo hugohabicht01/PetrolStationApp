@@ -1,6 +1,7 @@
 import uuid
-from pydantic import BaseModel, validator
 from typing import List, Union
+
+from pydantic import BaseModel, validator
 
 
 class Coordinate(BaseModel):
